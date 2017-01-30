@@ -8,16 +8,9 @@ public class Side_0Image : MonoBehaviour {
 
 	Image _image;
 	LinkedList<Sprite> _list;
-	Object[] _images;
-	void Start () {
-		
+	void Start () {		
 		_image = GetComponent<Image> ();
-		_images = Resources.LoadAll ("Images", typeof(Sprite));
 		_list = new LinkedList<Sprite> (Resources.LoadAll ("Images", typeof(Sprite)).Cast<Sprite>());
-		/*
-		foreach (Sprite image in _images) {
-			_list.AddFirst (image);
-		}*/
 	}
 
 	public void NextImage()
