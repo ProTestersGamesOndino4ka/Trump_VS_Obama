@@ -21,6 +21,8 @@ public class clicks : MonoBehaviour {
         
 	}
 
+
+
 	public void StartGame()
 	{
 		if (!Timer.isTimerStarted) {
@@ -38,4 +40,6 @@ public class clicks : MonoBehaviour {
 			Timer.StartTimer (5);
 		}
 	}
+
+
 }
