@@ -34,7 +34,7 @@ public class GoogleAutho : MonoBehaviour, RealTimeMultiplayerListener
     {
         string str = System.Text.Encoding.UTF8.GetString(data);
         side_1Text.scoreValue = Convert.ToInt32(str);
-        GameObject.Find("Canvas/Button_Check/Text").GetComponent<Text>().text = str.ToString();
+        //GameObject.Find("Canvas/Button_Check/Text").GetComponent<Text>().text = str.ToString();
     }
 
     public void OnRoomConnected(bool success)
@@ -72,7 +72,6 @@ public class GoogleAutho : MonoBehaviour, RealTimeMultiplayerListener
     }
     public void ViewInvite()
     {
-
         PlayGamesPlatform.Instance.RealTime.AcceptFromInbox(this);
     }
 
