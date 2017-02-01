@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Side_0Image : MonoBehaviour {
+public class LocalPresidentImage : MonoBehaviour {
 
 	Image _image;
 	LinkedList<Sprite> _list;
@@ -23,16 +23,25 @@ public class Side_0Image : MonoBehaviour {
 		}
         GetImageName();
     }
+	public void PreviousImage()
+	{	
+		if (_list.Find (_image.sprite).Previous == null) {           
+			_image.sprite = _list.Last.Value;
+		} else {
+			_image.sprite = _list.Find (_image.sprite).Previous.Value;
+		}
+		GetImageName();
+	}
 
     public void GetImageName()
     {
-        if (LocalRecords.myPresident.Exists(x => x.ImageName == _image.sprite.name))
+		if (LocalRecords.myPresidents.Exists(x => x.ImageName == _image.sprite.name))
         {
             GameObject.Find("Canvas/Button_SelectOrBuy/Text").GetComponent<Text>().text = "выбрать";
         }
         else
         {
-            GameObject.Find("Canvas/Button_SelectOrBuy/Text").GetComponent<Text>().text = "купить";
+			GameObject.Find ("Canvas/Button_SelectOrBuy/Text").GetComponent<Text> ().text = LocalRecords.allPresidents.Find (x => x.ImageName == _image.sprite.name).Price;
         }
     }
 }

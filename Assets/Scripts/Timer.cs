@@ -11,19 +11,19 @@ public class Timer : MonoBehaviour {
 	{
 		_timer = value;
 		isTimerStarted = true;
-		side_0Text.Refresh ();
-		side_1Text.Refresh ();
+		LocalPresidentText.Refresh ();
+		EnemyPresidentText.Refresh ();
 	}
 
 	 void Update () {
 		if (_timer > 0) {
 			_timer -= Time.deltaTime;
-			side_0Timer.SetValue (_timer);
-			side_1Timer.SetValue (_timer);
+			LocalPresidentTimer.SetValue (_timer);
+			EnemyPresidentTimer.SetValue (_timer);
 		} else {
 			isTimerStarted = false;
 		}
-		side_1Text.SetValue();
+		EnemyPresidentText.SetValue();
 
     }
 }

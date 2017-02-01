@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class side_1Text : MonoBehaviour {
+public class EnemyPresidentText : MonoBehaviour {
 
-	static Text side1;
+	static Text _enemyPresident;
 	public static  int scoreValue;
 
 	void Start()
 	{
-		side1 = GetComponent<Text> ();
+		_enemyPresident = GetComponent<Text> ();
 		scoreValue = 0;
-		side1.text = scoreValue.ToString();
+		_enemyPresident.text = scoreValue.ToString();
 	}
 	public static void Refresh()
 	{
@@ -21,11 +21,11 @@ public class side_1Text : MonoBehaviour {
 	}
     public static void SetValue()
     {
-        side1.text = scoreValue.ToString();
+        _enemyPresident.text = scoreValue.ToString();
     }
 
     public static void IncreaseValue()
 	{
-		side1.text = (++scoreValue).ToString ();
+		_enemyPresident.text = (++scoreValue).ToString ();
 	}
 }

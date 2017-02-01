@@ -33,7 +33,7 @@ public class GoogleAutho : MonoBehaviour, RealTimeMultiplayerListener
     public void OnRealTimeMessageReceived(bool isReliable, string senderId, byte[] data)
     {
         string str = System.Text.Encoding.UTF8.GetString(data);
-        side_1Text.scoreValue = Convert.ToInt32(str);
+		EnemyPresidentText.scoreValue = Convert.ToInt32(str);
         //GameObject.Find("Canvas/Button_Check/Text").GetComponent<Text>().text = str.ToString();
     }
 
@@ -77,7 +77,7 @@ public class GoogleAutho : MonoBehaviour, RealTimeMultiplayerListener
 
      static public void Message() {
        
-        byte[] message = System.Text.Encoding.UTF8.GetBytes(side_0Text.scoreValue.ToString());
+		byte[] message = System.Text.Encoding.UTF8.GetBytes(LocalPresidentText.scoreValue.ToString());
            
         bool reliable = false;
         PlayGamesPlatform.Instance.RealTime.SendMessageToAll(reliable, message);

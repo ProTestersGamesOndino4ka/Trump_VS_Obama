@@ -11,7 +11,7 @@ public class clicks : MonoBehaviour {
 	{
 		
 		if (Timer.isTimerStarted) {
-			side_0Text.IncreaseValue ();
+			LocalPresidentText.IncreaseValue ();
 			GoogleAutho.Message ();
 		} 
 		else
@@ -34,7 +34,7 @@ public class clicks : MonoBehaviour {
 
 	public void OnSide1Click()
 	{
-		side_1Text.IncreaseValue ();
+		EnemyPresidentText.IncreaseValue ();
 		if (!Timer.isTimerStarted) 
 		{
 			Timer.StartTimer (5);
