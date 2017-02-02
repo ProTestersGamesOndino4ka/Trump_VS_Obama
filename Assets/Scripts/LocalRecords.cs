@@ -24,7 +24,12 @@ public class LocalRecords : MonoBehaviour
 			new President (){ ID = 4, LastName = "Abe", Country = "Japan", Price = "0.99$", ImageName = "abe" },
 			new President (){ ID = 5, LastName = "Merkel", Country = "Germany", Price = "0.99$", ImageName = "merkel" },
 			new President (){ ID = 6, LastName = "Lukashenko", Country = "Belarus", Price = "0.99$", ImageName = "batska" },
-		};
+            new President (){ ID = 7, LastName = "Erdogan", Country = "Turkey", Price = "0.99$", ImageName = "erdogan" },
+            new President (){ ID = 8, LastName = "Olland", Country = "France", Price = "0.99$", ImageName = "olland" },
+            new President (){ ID = 9, LastName = "Nieto", Country = "Mexico", Price = "0.99$", ImageName = "pena_nieto" },
+            new President (){ ID = 10, LastName = "Elizabeth II", Country = "Great Britain", Price = "0.99$", ImageName = "queen_elizabeth_2" },
+
+        };
 
 		ReadFile ();
 		AddMyPresident (allPresidents);   
