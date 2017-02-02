@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class LocalPresidentImage : MonoBehaviour {
 
 	Image _image;
-	LinkedList<Sprite> _list;
+    static public LinkedList<Sprite> _list;
 	void Start () {		
 		_image = GetComponent<Image> ();
 		_list = new LinkedList<Sprite> (Resources.LoadAll ("Images", typeof(Sprite)).Cast<Sprite>());

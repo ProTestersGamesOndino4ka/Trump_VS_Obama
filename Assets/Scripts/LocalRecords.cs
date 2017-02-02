@@ -9,9 +9,9 @@ using UnityEngine.UI;
 public class LocalRecords : MonoBehaviour
 {
 
-	static string _txt = string.Empty;
+	
 	static string FILE_NAME = "records.txt";
-	static int[] records;
+	public static int[] records;
 	public static  List<President> myPresidents = new List<President> ();
 	public static  List<President> allPresidents;
 
@@ -30,7 +30,7 @@ public class LocalRecords : MonoBehaviour
 		AddMyPresident (allPresidents);   
 	}
 
-	void ReadFile ()
+	static public  void ReadFile ()
 	{
 #if UNITY_EDITOR
 		string path = Application.dataPath + "/" + FILE_NAME;
@@ -44,8 +44,8 @@ public class LocalRecords : MonoBehaviour
 			fileWriter.Close ();
 		}
 		var fileReader = File.OpenText (path);
-		records = fileReader.ReadToEnd ().Split (new string[] { ";" }, StringSplitOptions.None).Select (s => int.Parse (s)).ToArray ();
-		fileReader.Close ();
+		records = fileReader.ReadToEnd ().Split (new string[] { ";" }, StringSplitOptions.None).Select (s => int.Parse (s)).ToArray ();        
+        fileReader.Close ();
 	}
 
 	void AddMyPresident (List <President> president)
