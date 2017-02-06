@@ -8,6 +8,7 @@ public class LocalPresidentImage : MonoBehaviour {
 
 	Image _image;
     static public LinkedList<Sprite> _list;
+	static public float y;
 	void Start () {		
 		_image = GetComponent<Image> ();
 		_list = new LinkedList<Sprite> (Resources.LoadAll ("Images", typeof(Sprite)).Cast<Sprite>());
