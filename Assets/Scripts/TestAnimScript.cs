@@ -25,6 +25,18 @@ public class TestAnimScript : MonoBehaviour {
 		case 4:
 			anim.SetInteger ("position", 5);
 			break;
+		case 5:
+			anim.SetInteger ("position", 6);
+			break;
+		case 6:
+			anim.SetInteger ("position", 7);
+			break;
+		case 7:
+			anim.SetInteger ("position", 8);
+			break;
+		case 8:
+			anim.SetInteger ("position", 9);
+			break;
 		default:
 			break;
 		}
@@ -47,6 +59,18 @@ public class TestAnimScript : MonoBehaviour {
 			break;
 		case 5:
 			anim.SetInteger ("position", 4);
+			break;
+		case 6:
+			anim.SetInteger ("position", 5);
+			break;
+		case 7:
+			anim.SetInteger ("position", 6);
+			break;
+		case 8:
+			anim.SetInteger ("position", 7);
+			break;
+		case 9:
+			anim.SetInteger ("position", 8);
 			break;
 		default:
 			break;
