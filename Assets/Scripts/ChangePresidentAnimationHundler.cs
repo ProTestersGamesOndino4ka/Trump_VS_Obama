@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TestAnimScript : MonoBehaviour {
+public class ChangePresidentAnimationHundler : MonoBehaviour {
 
 	public Animator anim;
+
+	public void SetPosition(int _pos)
+	{
+		anim.SetInteger ("position", _pos);
+	}
 
 	public void NextImageAnimation()
 	{
