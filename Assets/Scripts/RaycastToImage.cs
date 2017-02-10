@@ -8,7 +8,7 @@ public class RaycastToImage : MonoBehaviour
 
 	private RaycastHit2D _hit;
 	public GameObject _objectCastingRay;
-	private Image _presidentImageHittedByRay;
+	public static Image _presidentImageHittedByRay { get; private set; }
 
 	public void MakeRay ()
 	{
