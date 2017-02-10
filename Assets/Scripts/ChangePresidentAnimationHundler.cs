@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ChangePresidentAnimationHundler : MonoBehaviour {
+public class ChangePresidentAnimationHundler : MonoBehaviour
+{
 
 	public Animator anim;
 
-	public void SetPosition(int _pos)
+	public void SetPosition (int _pos)
 	{
 		anim.SetInteger ("position", _pos);
 	}
 
-	public void NextImageAnimation()
+	public void NextImageAnimation ()
 	{
 		switch (anim.GetInteger ("position")) {
 		case 0:
@@ -47,7 +48,8 @@ public class ChangePresidentAnimationHundler : MonoBehaviour {
 		}
 		Debug.Log ("Position " + anim.GetInteger ("position"));
 	}
-	public void PrevImageAnimation()
+
+	public void PrevImageAnimation ()
 	{
 		switch (anim.GetInteger ("position")) {
 		case 1:

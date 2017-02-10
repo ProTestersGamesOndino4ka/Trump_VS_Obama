@@ -3,27 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class clicks : MonoBehaviour {
+public class TimersHundler : MonoBehaviour
+{
 
 	public GameObject stratButton;
 
-	public void OnSide0Click()
+	public void OnSide0Click ()
 	{
 		
 		if (Timer.isTimerStarted) {
 			LocalPresidentText.IncreaseValue ();
 			GoogleAutho.Message ();
-		} 
-		else
-		{
-			stratButton.SetActive(true);
-		}
+		} else {			
+			stratButton.SetActive (true);
+		}  
         
 	}
 
 
 
-	public void StartGame()
+	public void StartGame ()
 	{
 		if (!Timer.isTimerStarted) {
 			Timer.StartTimer (5);
@@ -32,11 +31,10 @@ public class clicks : MonoBehaviour {
 	}
 
 
-	public void OnSide1Click()
+	public void OnSide1Click ()
 	{
 		EnemyPresidentText.IncreaseValue ();
-		if (!Timer.isTimerStarted) 
-		{
+		if (!Timer.isTimerStarted) {
 			Timer.StartTimer (5);
 		}
 	}

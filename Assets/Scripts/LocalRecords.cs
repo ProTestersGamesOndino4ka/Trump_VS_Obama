@@ -15,14 +15,14 @@ public class LocalRecords : MonoBehaviour
 	public static  List<President> myPresidents = new List<President> ();
 	public static  List<President> allPresidents;
 
-	void Start ()
+	void Awake ()
 	{
 		allPresidents = new List<President> () {
 			new President () {
 				ID = 1,
 				LastName = "Obama",
 				Country = "USE",
-				Price = "0.99$",
+				Price = "$0.99",
 				ImageName = "obama",
 				FlagName = "flag_usa"
 			},
@@ -30,7 +30,7 @@ public class LocalRecords : MonoBehaviour
 				ID = 2,
 				LastName = "Putin",
 				Country = "Russia",
-				Price = "0.99$",
+				Price = "$0.99",
 				ImageName = "putin",
 				FlagName = "flag_rus"
 			},
@@ -38,7 +38,7 @@ public class LocalRecords : MonoBehaviour
 				ID = 3,
 				LastName = "Trump",
 				Country = "USA",
-				Price = "0.99$",
+				Price = "$0.99",
 				ImageName = "trump",
 				FlagName = "flag_usa"
 			},
@@ -46,7 +46,7 @@ public class LocalRecords : MonoBehaviour
 				ID = 4,
 				LastName = "Abe",
 				Country = "Japan",
-				Price = "0.99$",
+				Price = "$0.99",
 				ImageName = "abe",
 				FlagName = "flag_jp"
 			},
@@ -54,7 +54,7 @@ public class LocalRecords : MonoBehaviour
 				ID = 5,
 				LastName = "Merkel",
 				Country = "Germany",
-				Price = "0.99$",
+				Price = "$0.99",
 				ImageName = "merkel",
 				FlagName = "flag_de"
 			},
@@ -62,7 +62,7 @@ public class LocalRecords : MonoBehaviour
 				ID = 6,
 				LastName = "Lukashenko",
 				Country = "Belarus",
-				Price = "0.99$",
+				Price = "$0.99",
 				ImageName = "batska",
 				FlagName = "flag_bel"
 			},
@@ -70,7 +70,7 @@ public class LocalRecords : MonoBehaviour
 				ID = 7,
 				LastName = "Erdogan",
 				Country = "Turkey",
-				Price = "0.99$",
+				Price = "$0.99",
 				ImageName = "erdogan",
 				FlagName = "flag_turk"
 			},
@@ -78,14 +78,15 @@ public class LocalRecords : MonoBehaviour
 				ID = 8,
 				LastName = "Olland",
 				Country = "France",
-				Price = "0.99$",
+				Price = "$0.99",
 				ImageName = "olland",
 				FlagName = "flag_fr"
 			},
 			new President () {
 				ID = 9,
+				LastName = "Pena Nieto",
 				Country = "Mexico",
-				Price = "0.99$",
+				Price = "$0.99",
 				ImageName = "pena_nieto",
 				FlagName = "flag_mexica"
 			},
@@ -93,16 +94,16 @@ public class LocalRecords : MonoBehaviour
 				ID = 10,
 				LastName = "Elizabeth II",
 				Country = "Great Britain",
-				Price = "0.99$",
-				ImageName = "queen_elizabeth_2" ,
+				Price = "$0.99",
+				ImageName = "queen_elizabeth_2",
 				FlagName = "flag_gb"
 			},
 		};
 
-		ReadFile ();
-		AddMyPresident (allPresidents);   
+		//ReadFile ();
+		//AddMyPresident (allPresidents);   
 	}
-
+	/*
 	static public  void ReadFile ()
 	{
 #if UNITY_EDITOR
@@ -118,10 +119,10 @@ public class LocalRecords : MonoBehaviour
 		}
 		var fileReader = File.OpenText (path);
 		records = fileReader.ReadToEnd ().Split (new string[] { ";" }, StringSplitOptions.None).Select (s => int.Parse (s)).ToArray ();        
-        fileReader.Close ();
-	}
+		fileReader.Close ();
+	}*/
 
-	void AddMyPresident (List <President> president)
+	/*void AddMyPresident (List <President> president)
 	{
 		foreach (var member in president) {
 			for (int i = 0; i < records.GetLength (0); i++) {
@@ -130,10 +131,15 @@ public class LocalRecords : MonoBehaviour
 				}
 			}
 		}
+	}*/
+
+	public static void SetMyPresidents ()
+	{
+		myPresidents = allPresidents.FindAll (x => DataParser.GetLocalPresidentIDs ().Exists (y => y == x.ID));
+		if (myPresidents == null || myPresidents.Count == 0) {
+			DataParser _data = new DataParser ();
+			_data.ReadDataFromFile ();
+		}
 	}
 
-	void Update ()
-	{
-		
-	}
 }

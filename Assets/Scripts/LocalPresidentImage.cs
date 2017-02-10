@@ -4,45 +4,43 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LocalPresidentImage : MonoBehaviour {
+public class LocalPresidentImage : MonoBehaviour
+{
 
-	Image _image;
-    static public LinkedList<Sprite> _list;
-	static public float y;
-	void Start () {		
-		_image = GetComponent<Image> ();
-		_list = new LinkedList<Sprite> (Resources.LoadAll ("Images", typeof(Sprite)).Cast<Sprite>());
-        GetImageName();
-    }
+	private static Image _currentPresidentImage;
+	private static bool isFree = false;
 
-	public void NextImage()
-	{	
-		if (_list.Find (_image.sprite).Next == null) {           
-			_image.sprite = _list.First.Value;
-		} else {
-			_image.sprite = _list.Find (_image.sprite).Next.Value;
-		}
-        GetImageName();
-    }
-	public void PreviousImage()
-	{	
-		if (_list.Find (_image.sprite).Previous == null) {           
-			_image.sprite = _list.Last.Value;
-		} else {
-			_image.sprite = _list.Find (_image.sprite).Previous.Value;
-		}
-		GetImageName();
+	public static void SetCurrentPresidentImage (Image presidentImage)
+	{
+		_currentPresidentImage = presidentImage;
+		SetPriceToButton ();
 	}
 
-    public void GetImageName()
-    {
-		if (LocalRecords.myPresidents.Exists(x => x.ImageName == _image.sprite.name))
-        {
-            GameObject.Find("Canvas/Button_SelectOrBuy/Text").GetComponent<Text>().text = "выбрать";
-        }
-        else
-        {
-			GameObject.Find ("Canvas/Button_SelectOrBuy/Text").GetComponent<Text> ().text = LocalRecords.allPresidents.Find (x => x.ImageName == _image.sprite.name).Price;
-        }
-    }
+	public static string GetCurrentPresidentImageName ()
+	{
+		return _currentPresidentImage.sprite.name;
+	}
+
+	private static void SetPriceToButton ()
+	{
+		if (LocalRecords.myPresidents.Exists (x => x.ImageName == _currentPresidentImage.sprite.name)) {
+			GameObject.FindGameObjectWithTag ("StartBuyButton").GetComponentInChildren<Text> ().text = "START";
+			isFree = true;
+		} else {
+			GameObject.FindGameObjectWithTag ("StartBuyButton").GetComponentInChildren<Text> ().text = LocalRecords.allPresidents.Find (x => x.ImageName == _currentPresidentImage.sprite.name).Price;
+			isFree = false;
+		}
+	}
+
+	public void OnStartBuyButtonClick ()
+	{
+		if (isFree) {
+			Debug.Log ("Playing");
+		} else {
+			Payments _payment = new Payments ();
+			_payment.Buy (LocalRecords.allPresidents.Find (x => x.ImageName == _currentPresidentImage.sprite.name).ID);
+		}
+	}
+
+
 }
