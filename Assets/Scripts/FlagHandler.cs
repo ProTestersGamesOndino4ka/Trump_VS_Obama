@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FlagHundler : MonoBehaviour
+public class FlagHandler : MonoBehaviour
 {
 	private static Image _flagImage;
 	private static List<Sprite> _listOfFlags;

@@ -16,9 +16,9 @@ public class LocalPresidentImage : MonoBehaviour
 		SetPriceToButton ();
 	}
 
-	public static string GetCurrentPresidentImageName ()
+	public static Image GetCurrentPresidentImage ()
 	{
-		return _currentPresidentImage.sprite.name;
+		return _currentPresidentImage;
 	}
 
 	private static void SetPriceToButton ()
@@ -37,8 +37,7 @@ public class LocalPresidentImage : MonoBehaviour
 		if (isFree) {
 			Debug.Log ("Playing");
 		} else {
-			Payments _payment = new Payments ();
-			_payment.Buy (LocalRecords.allPresidents.Find (x => x.ImageName == _currentPresidentImage.sprite.name).ID);
+			Payments.Buy (LocalRecords.allPresidents.Find (x => x.ImageName == _currentPresidentImage.sprite.name).ID);
 		}
 	}
 

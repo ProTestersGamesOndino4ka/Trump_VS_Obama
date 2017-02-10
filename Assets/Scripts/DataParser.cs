@@ -13,7 +13,7 @@ public class DataParser
 	private static readonly int INDEX_OF_PRESIDENT_IDS_STRING = 1;
 	private static readonly int TARGET_DATASUBSTRINGS_LENGTH = 4;
 	private static readonly int INDEX_OF_MAXSCORE_STRING = 3;
-	private static readonly string SAMPLE_DATA_STRING = "{\"localPresidents\":1;2;3,\"recordScore\":0}";
+	private static readonly string SAMPLE_DATA_STRING = "\"localPresidents\":1;2;3,\"recordScore\":0";
 
 	private static string _dataString;
 	private static string _pathToFile;
@@ -82,6 +82,9 @@ public class DataParser
 				localPresidentIDs = dataSubstrings [INDEX_OF_PRESIDENT_IDS_STRING].Split (';').Select (s => int.Parse (s)).ToList<int> ();
 				GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\n IDS: " + string.Join (";", localPresidentIDs.Select (x => x.ToString ()).ToArray<string> ());
 				LocalRecords.SetMyPresidents ();
+				GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "Set local presidents";
+				LocalPresidentImage.SetCurrentPresidentImage (LocalPresidentImage.GetCurrentPresidentImage ());
+				GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "Set price";
 			} catch (FormatException) {
 				GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\n Error on parse PresidetsID ";
 				Debug.LogWarning ("Error on parse PresidetsID");
@@ -127,8 +130,8 @@ public class DataParser
 	private string CreateLocalDataString ()
 	{
 		string tempDataString = string.Empty;
-		tempDataString += "{\"localPresidents\":";
-		tempDataString += string.Join (",", localPresidentIDs.Select (x => x.ToString ()).ToArray<string> ());
+		tempDataString += "\"localPresidents\":";
+		tempDataString += string.Join (";", localPresidentIDs.Select (x => x.ToString ()).ToArray<string> ());
 		tempDataString += ",\"maxScore\":";
 		tempDataString += maxScore.ToString ();
 		_dataString = tempDataString;
@@ -175,6 +178,7 @@ public class DataParser
 	{
 		var fileWritter = File.CreateText (_pathToFile);
 		fileWritter.WriteLine (_dataString);
+		fileWritter.Close ();
 	}
 
 	public void SetDataStringFromLoadedString (string loadedDataString)

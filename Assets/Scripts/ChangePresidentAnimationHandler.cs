@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ChangePresidentAnimationHundler : MonoBehaviour
+public class ChangePresidentAnimationHandler : MonoBehaviour
 {
 
 	public Animator anim;

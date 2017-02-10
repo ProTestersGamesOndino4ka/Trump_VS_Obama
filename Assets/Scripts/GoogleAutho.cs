@@ -52,16 +52,25 @@ public class GoogleAutho : MonoBehaviour, RealTimeMultiplayerListener
 		throw new NotImplementedException ();
 	}
 
-	void Start ()
+	void Awake ()
 	{
-		GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text = "Before activation";
-		PlayGamesPlatform.Activate ();
-		GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\nActivation";
+		GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text = "Before config";
+		try {
+			PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder ()
+				.EnableSavedGames ()
+				.Build ();
+			PlayGamesPlatform.InitializeInstance (config);
+			PlayGamesPlatform.Activate ();
+		} catch (System.Exception ex) {
+			Debug.LogWarning ("Unhandled exception on config Initializing" + ex.Message);
+		}
 		Social.localUser.Authenticate ((bool success) => {
 			GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\n" + success;
 			Debug.Log (success);
 			if (success) {
+				GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\nActivation";
 				GooglePlayGames_CloudSystem _cloud = new GooglePlayGames_CloudSystem ();
+				_cloud.Initialize ();
 			} else {
 				DataParser _data = new DataParser ();
 				_data.ReadDataFromFile ();

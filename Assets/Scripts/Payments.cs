@@ -8,15 +8,14 @@ public class Payments
 	public Payments ()
 	{
 		//Some Google Play shit
-		//	_cloud = new GooglePlayGames_CloudSystem ();
-
 	}
 
-	public void Buy (int presidentID)
+	public static void Buy (int presidentID)
 	{
 		//Some Google Play shit
 		DataParser.AddPresidentID (presidentID);
-		//	_cloud.SaveDataToCloud (_data);
+		GooglePlayGames_CloudSystem cloudSave = new GooglePlayGames_CloudSystem ();
+		cloudSave.SaveDataToCloud (new DataParser ());
 	}
 
 }

@@ -15,7 +15,7 @@ public class RaycastToImage : MonoBehaviour
 		_hit = Physics2D.Raycast (_objectCastingRay.transform.position, -Vector2.up);
 		_presidentImageHittedByRay = _hit.transform.gameObject.GetComponent<Image> ();
 		Debug.Log (_presidentImageHittedByRay.sprite.ToString ());
-		FlagHundler.SetFlagSprite (_presidentImageHittedByRay.sprite.name);
+		FlagHandler.SetFlagSprite (_presidentImageHittedByRay.sprite.name);
 		LocalPresidentImage.SetCurrentPresidentImage (_presidentImageHittedByRay);
 	}
 
