@@ -15,6 +15,8 @@ public class DataParser
 	private static readonly int INDEX_OF_MAXSCORE_STRING = 3;
 	private static readonly string SAMPLE_DATA_STRING = "\"localPresidents\":1;2;3,\"recordScore\":0";
 
+	private static int _deletesCount = 0;
+
 	private static string _dataString;
 	private static string _pathToFile;
 	private static List<int> localPresidentIDs;
@@ -68,7 +70,7 @@ public class DataParser
 
 	private void ParseDataStringToElements ()
 	{
-		GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\n_data: " + _dataString;
+		Debug.Log ("_data: " + _dataString);
 		if (!string.IsNullOrEmpty (_dataString)) {
 			string[] dataSubstrings = new string[]{ };
 			try {
@@ -80,18 +82,18 @@ public class DataParser
 			}
 			try {
 				localPresidentIDs = dataSubstrings [INDEX_OF_PRESIDENT_IDS_STRING].Split (';').Select (s => int.Parse (s)).ToList<int> ();
-				GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\n IDS: " + string.Join (";", localPresidentIDs.Select (x => x.ToString ()).ToArray<string> ());
+				Debug.Log (" IDS: " + string.Join (";", localPresidentIDs.Select (x => x.ToString ()).ToArray<string> ()));
 				LocalRecords.SetMyPresidents ();
-				GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "Set local presidents";
+				Debug.Log ("Set local presidents");
 				LocalPresidentImage.SetCurrentPresidentImage (LocalPresidentImage.GetCurrentPresidentImage ());
-				GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "Set price";
+				Debug.Log ("Set price");
 			} catch (FormatException) {
-				GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\n Error on parse PresidetsID ";
+				Debug.Log (" Error on parse PresidetsID ");
 				Debug.LogWarning ("Error on parse PresidetsID");
 				DeleteFile ();
 				return;
 			} catch (IndexOutOfRangeException) {
-				GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\n Error on Split substring or wrong INDEX_OF_PRESIDENT_IDS_STRING ";
+				Debug.Log (" Error on Split substring or wrong INDEX_OF_PRESIDENT_IDS_STRING ");
 				Debug.LogWarning ("Error on Split substring or wrong INDEX_OF_PRESIDENT_IDS_STRING");
 				DeleteFile ();
 				return;
@@ -99,8 +101,9 @@ public class DataParser
 
 			if (dataSubstrings.Length == TARGET_DATASUBSTRINGS_LENGTH) {
 				try {
-					GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\n" + dataSubstrings.Length;
+					Debug.Log ("\nSunstring count = " + dataSubstrings.Length);
 					maxScore = int.Parse (dataSubstrings [INDEX_OF_MAXSCORE_STRING].Replace ('}', '\0'));
+					Debug.Log ("\nMax score = " + maxScore);
 				} catch (FormatException) {
 					Debug.LogWarning ("Error on parse \"localrecord\"");
 					DeleteFile ();
@@ -110,8 +113,8 @@ public class DataParser
 				}
 			} else {
 				Debug.LogWarning ("Wrong substring length");
-				GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\nWrong substring length= " + dataSubstrings.Length;
-				DeleteFile ();
+				Debug.Log ("Wrong substring length= " + dataSubstrings.Length);
+				ReadDataFromFile ();
 				return;
 			}
 
@@ -158,7 +161,7 @@ public class DataParser
 			} else if (LocalRecords.allPresidents != null) {
 				if (LocalRecords.allPresidents.Exists (x => x.ID == boughtPresidentID)) {
 					localPresidentIDs.Add (boughtPresidentID);
-					Debug.Log ("President ID added to list");
+					Debug.LogWarning ("President ID added to list");
 				} else {
 					Debug.LogWarning ("President Id not found!");
 				}
@@ -189,8 +192,14 @@ public class DataParser
 
 	private void DeleteFile ()
 	{
-		File.Delete (_pathToFile);
-		GooglePlayGames_CloudSystem cloud = new GooglePlayGames_CloudSystem ();
-		cloud.Initialize ();
+		Debug.Log ("Delete file = " + _deletesCount);
+		if (++_deletesCount < 5) {
+
+			File.Delete (_pathToFile);
+			GooglePlayGames_CloudSystem cloud = new GooglePlayGames_CloudSystem ();
+			cloud.Initialize ();
+		} else {
+			ReadDataFromFile ();
+		}
 	}
 }

@@ -32,7 +32,6 @@ public class GooglePlayGames_CloudSystem
 		if (!isAuthenticated) {
 			_data.ReadDataFromFile ();
 		}
-		GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\nLoadedDataString: " + loadedDataString;
 	}
 
 	public static bool isAuthenticated {
@@ -42,12 +41,9 @@ public class GooglePlayGames_CloudSystem
 	public void SaveDataToCloud (DataParser data)
 	{
 		if (isAuthenticated) {
-			GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text = "Authenticated To save";
 			if (loadedDataString != data.GetLocalDataString ()) {
 				_saveDataString = data.GetLocalDataString ();
-				GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\nstring to save: " + _saveDataString;
 				data.SaveDataStringInFile ();
-				GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\nSaved in file ";
 				try {
 					((PlayGamesPlatform)Social.Active).SavedGame.OpenWithAutomaticConflictResolution (
 						SAVE_NAME,
@@ -56,7 +52,7 @@ public class GooglePlayGames_CloudSystem
 						SaveData
 					);
 				} catch (System.Exception ex) {
-					GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\n" + ex.Message;
+					Debug.LogWarning ("Same loaded string as file" + ex.Message);
 				}
 
 			}
@@ -66,12 +62,12 @@ public class GooglePlayGames_CloudSystem
 	private void SaveData (SavedGameRequestStatus status, ISavedGameMetadata game)
 	{
 		if (status == SavedGameRequestStatus.Success && !string.IsNullOrEmpty (_saveDataString)) {
-			GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\nGood status";
+			Debug.Log ("Good status");
 			byte[] savingData = ToBytes (_saveDataString);
-			GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\nbytes ";
+			Debug.Log ("bytes ");
 			SavedGameMetadataUpdate.Builder builder = new SavedGameMetadataUpdate.Builder ();
 			SavedGameMetadataUpdate updateMetadata = builder.Build ();
-			GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\nBuilders";
+			Debug.Log ("Builders");
 			((PlayGamesPlatform)Social.Active).SavedGame.CommitUpdate (
 				game,
 				updateMetadata,
@@ -84,21 +80,21 @@ public class GooglePlayGames_CloudSystem
 	private void SavedDataWritten (SavedGameRequestStatus status, ISavedGameMetadata game)
 	{
 		if (status == SavedGameRequestStatus.Success) {
-			GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\nGame written";
+			Debug.Log ("Game written");
 			Debug.Log ("Game " + game.Description + "written");
 			DataParser data = new DataParser ();
 			data.SetDataStringFromLoadedString (_saveDataString);
 		} else {
-			GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\nGame NOT written";
+			Debug.Log ("Game NOT written");
 			Debug.LogWarning ("Error saving game: " + status);
 		}
 	}
 
 	public void LoadDataFromCloud ()
 	{		
-		GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\nTry Load from cloud";
+		Debug.Log ("Try Load from cloud");
 		if (isAuthenticated) {
-			GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\nAuth";
+			Debug.Log ("Auth");
 			Debug.Log ("Loading data from cloud");
 			try {
 
@@ -109,17 +105,16 @@ public class GooglePlayGames_CloudSystem
 					LoadData
 				);	
 			} catch (System.Exception ex) {
-				GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\n" + ex.Message;
+				Debug.Log ("" + ex.Message);
 			}
 		} else {
-			GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\nNot authenticated";
 			Debug.Log ("Not authenticated");
 		}
 	}
 
 	private void LoadData (SavedGameRequestStatus status, ISavedGameMetadata game)
 	{
-		GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\ntry load data";
+		Debug.Log ("try load data");
 		((PlayGamesPlatform)Social.Active).SavedGame.ReadBinaryData (
 			game,
 			SavedDataLoaded
@@ -129,20 +124,17 @@ public class GooglePlayGames_CloudSystem
 	private void SavedDataLoaded (SavedGameRequestStatus status, byte[] data)
 	{
 		if (status == SavedGameRequestStatus.Success) {
-			GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\nData load seccess";
 			Debug.Log ("Data load seccess");
 			if (data != null) {
 				loadedDataString = FromBytes (data);
-				GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\nSaved loaded data to loadedDataString" + loadedDataString;
+				Debug.Log ("Saved loaded data to loadedDataString = " + loadedDataString);
 				DataParser dataString = new DataParser ();
 				dataString.SetDataStringFromLoadedString (loadedDataString);
 				Debug.Log ("Saved loaded data to loadedDataString" + loadedDataString);				
-			} else {				
-				GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\nLoading data is NULL!";
+			} else {
 				Debug.LogWarning ("Loading data is NULL!");
 			}
 		} else {
-			GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\nError loading data from cloud!";
 			Debug.LogWarning ("Error loading data from cloud!");
 		}
 	}
@@ -162,5 +154,31 @@ public class GooglePlayGames_CloudSystem
 	{
 		string saveString = Encoding.UTF8.GetString (bytes);
 		return saveString;
+	}
+
+
+	public static void ShowSelectUI ()
+	{
+		uint maxNumToDisplay = 5;
+		bool allowCreateNew = true;
+		bool allowDelete = true;
+
+		ISavedGameClient saveGameClient = PlayGamesPlatform.Instance.SavedGame;
+		saveGameClient.ShowSelectSavedGameUI (
+			"Saved Games",
+			maxNumToDisplay,
+			allowCreateNew,
+			allowDelete,
+			OnSavedGameSelected
+		);
+	}
+
+	static void OnSavedGameSelected (SelectUIStatus status, ISavedGameMetadata game)
+	{
+		if (status == SelectUIStatus.SavedGameSelected) {
+			Debug.Log ("selected game" + game.Description);
+		} else {
+			Debug.Log ("Error by selected game");
+		}
 	}
 }
