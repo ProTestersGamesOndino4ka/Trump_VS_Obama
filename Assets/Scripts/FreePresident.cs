@@ -19,20 +19,45 @@ public class FreePresident : MonoBehaviour
     public float scrollSpeed = -20;
     private RaycastHit2D _hit;
     public Image prize;
+    
+    
 
+   
     public void FreePresidentButton()
     {
-        gameObject.SetActive(true);
-        freePresident = true;
-        GenerateFreePresident();      
+        if (DataParser.GetPoints() > 99)
+        {
+            gameObject.SetActive(true);
+            freePresident = true;
+            GenerateFreePresident();
+            DataParser.SetPoints(-100);
+            new GooglePlayGames_CloudSystem().SaveDataToCloud(new DataParser());
+        }
+        else
+        {
+            //ShowReklama
+            DataParser.SetPoints(50);
+            new GooglePlayGames_CloudSystem().SaveDataToCloud(new DataParser());
+            PlayerPrefs.SetString("TimeFreePresident", DateTime.Now.ToString());
+            CloseTab(); 
+        }   
     }
+
     public void CloseTab ()
-     {
-        panelPrize.SetActive(false);
+     {      
         SceneManager.LoadScene("free_president");
+    }
+    void Start()
+    {
+        CheckCountClickPoints();
+        Update();
     }
     void Update()
     {
+        if (Convert.ToDateTime(PlayerPrefs.GetString("TimeFreePresident")).AddMinutes(10) > DateTime.Now)
+        {
+            GameObject.Find("Canvas/Text").GetComponent<Text>().text = Convert.ToString(Convert.ToDateTime(PlayerPrefs.GetString("TimeFreePresident")).AddMinutes(10) - DateTime.Now);
+        }
         if (freePresident)
         {
             scrollSpeed = Mathf.MoveTowards(scrollSpeed, 0, 2f * Time.deltaTime);
@@ -45,6 +70,7 @@ public class FreePresident : MonoBehaviour
             {              
                 prize.sprite = _hit.collider.gameObject.GetComponent<Image>().sprite;
                 panelPrize.SetActive(true);
+                //Payments.Buy(LocalRecords.allPresidents.Find(X=>X.ImageName == prize.sprite.name).ID);
             }
             else 
             {
@@ -101,6 +127,45 @@ public class FreePresident : MonoBehaviour
             obj = Instantiate(presidentImage[randomPresident], new Vector2(0, 0), Quaternion.identity) as GameObject;
             obj.transform.SetParent(scrollPanel.transform);
             obj.transform.localScale = new Vector2(1,1);           
+        }
+    }
+
+    void CheckCountClickPoints()
+    {
+        if (DataParser.GetPoints() > 99)
+        {
+            GameObject.Find("Canvas/Button_RandomPresident/Text").GetComponent<Text>().text = "free president -100 points";
+        }
+        else
+        {
+            GameObject.Find("Canvas/Button_RandomPresident/Text").GetComponent<Text>().text = "VIEW ads get 50 points";
+        }
+    }
+
+
+    void Buy()
+    {
+        IPStatus status = IPStatus.Unknown;
+        try
+        {
+            status = new System.Net.NetworkInformation.Ping().Send("www.google.com").Status;
+        }
+        catch
+        {
+        }
+
+        if (status == IPStatus.Success)
+        {
+          //  ShowReklama();
+            GameObject.Find("Canvas/Text_StatusIP").GetComponent<Text>().text = "success";
+          //  clickPoints += 200;//ибо 1000 как-то дохера
+           //new GooglePlayGames_CloudSystem().SaveDataToCloud(new DataParser ());
+            CheckCountClickPoints();
+          //  GameObject.Find("Canvas/Text_ClickPoint").GetComponent<Text>().text = clickPoints.ToString();
+        }
+        else
+        {
+            GameObject.Find("Canvas/Text_StatusIP").GetComponent<Text>().text = "нет соединения с интернетом";
         }
     }
 }
@@ -168,15 +233,3 @@ public class FreePresident : MonoBehaviour
 //        }
 //    }
 
-//void CheckCountClickPoints()
-//{
-//    if (clickPoints > 999)
-//    {
-//        GameObject.Find("Canvas/Button_RandomPresident/Text").GetComponent<Text>().text = "free president -100 points";
-//    }
-//    else
-//    {
-//        GameObject.Find("Canvas/Button_RandomPresident/Text").GetComponent<Text>().text = "VIEW ads get 100 points";
-//    }
-//}
-//}
