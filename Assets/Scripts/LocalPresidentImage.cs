@@ -24,19 +24,6 @@ public class LocalPresidentImage : MonoBehaviour
 
 	private static void SetPriceToButton ()
 	{
-        
-            if (LocalRecords.myPresidents.Exists(x => x.ImageName == _currentPresidentImage.sprite.name))
-            {
-                GameObject.FindGameObjectWithTag("StartBuyButton").GetComponentInChildren<Text>().text = "START";
-                isFree = true;
-            }
-            else
-            {
-                GameObject.FindGameObjectWithTag("StartBuyButton").GetComponentInChildren<Text>().text = LocalRecords.allPresidents.Find(x => x.ImageName == _currentPresidentImage.sprite.name).Price;
-                isFree = false;
-            }
-        
-
 		if (_currentPresidentImage != null) {
 			if (LocalRecords.myPresidents.Exists (x => x.ImageName == _currentPresidentImage.sprite.name)) {
 				GameObject.FindGameObjectWithTag ("StartBuyButton").GetComponentInChildren<Text> ().text = NO_PRICE_TEXT;
@@ -51,7 +38,6 @@ public class LocalPresidentImage : MonoBehaviour
 				SetCurrentPresidentImage (tempPresidentImage);
 			}
 		}
-
 	}
 
 	public void OnStartBuyButtonClick ()
