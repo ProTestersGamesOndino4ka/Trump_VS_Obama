@@ -1,1 +1,1 @@
-{"localPresidents":1;2;3,"recordScore":0}
+"localPresidents":1;2;3,"recordScore":0

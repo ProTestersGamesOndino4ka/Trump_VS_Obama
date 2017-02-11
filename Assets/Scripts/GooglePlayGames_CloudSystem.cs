@@ -29,6 +29,9 @@ public class GooglePlayGames_CloudSystem
 				_data.SetDataStringFromLoadedString (loadedDataString);
 			}
 		}
+		if (!isAuthenticated) {
+			_data.ReadDataFromFile ();
+		}
 		GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\nLoadedDataString: " + loadedDataString;
 	}
 

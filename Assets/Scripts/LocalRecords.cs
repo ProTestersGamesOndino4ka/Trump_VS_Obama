@@ -9,9 +9,6 @@ using UnityEngine.UI;
 public class LocalRecords : MonoBehaviour
 {
 
-	
-	static string FILE_NAME = "records.txt";
-	public static int[] records;
 	public static  List<President> myPresidents = new List<President> ();
 	public static  List<President> allPresidents;
 
@@ -98,40 +95,8 @@ public class LocalRecords : MonoBehaviour
 				ImageName = "queen_elizabeth_2",
 				FlagName = "flag_gb"
 			},
-		};
-
-		//ReadFile ();
-		//AddMyPresident (allPresidents);   
+		}; 
 	}
-	/*
-	static public  void ReadFile ()
-	{
-#if UNITY_EDITOR
-		string path = Application.dataPath + "/" + FILE_NAME;
-#else
-		string path = Application.persistentDataPath + "/" + FILE_NAME;
-#endif
-		if (!File.Exists (path)) {
-			var fileWriter = File.CreateText (path);
-			fileWriter.Write ("1;2;3");
-          
-			fileWriter.Close ();
-		}
-		var fileReader = File.OpenText (path);
-		records = fileReader.ReadToEnd ().Split (new string[] { ";" }, StringSplitOptions.None).Select (s => int.Parse (s)).ToArray ();        
-		fileReader.Close ();
-	}*/
-
-	/*void AddMyPresident (List <President> president)
-	{
-		foreach (var member in president) {
-			for (int i = 0; i < records.GetLength (0); i++) {
-				if (member.ID == records [i]) {
-					myPresidents.Add (member);
-				}
-			}
-		}
-	}*/
 
 	public static void SetMyPresidents ()
 	{
