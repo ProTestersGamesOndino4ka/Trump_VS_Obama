@@ -19,7 +19,7 @@ public class FreePresident : MonoBehaviour
     public float scrollSpeed = -20;
     private RaycastHit2D _hit;
     public Image prize;
-    
+   
     
 
    
@@ -49,11 +49,17 @@ public class FreePresident : MonoBehaviour
     }
     void Start()
     {
+        if (PlayerPrefs.GetString("TimeFreePresident") == string.Empty || PlayerPrefs.GetString("TimeFreePresident") == null)
+        {
+            PlayerPrefs.SetString("TimeFreePresident", DateTime.Now.AddMinutes(10).ToString());
+        }
+
         CheckCountClickPoints();
         Update();
     }
     void Update()
     {
+         
         if (Convert.ToDateTime(PlayerPrefs.GetString("TimeFreePresident")).AddMinutes(10) > DateTime.Now)
         {
             GameObject.Find("Canvas/Text").GetComponent<Text>().text = Convert.ToString(Convert.ToDateTime(PlayerPrefs.GetString("TimeFreePresident")).AddMinutes(10) - DateTime.Now);
