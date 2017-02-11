@@ -9,6 +9,7 @@ using System.Linq;
 public class DataParser
 {
 
+
     private static readonly string FILE_NAME = "JSON_DATA.txt";
     private static readonly int INDEX_OF_PRESIDENT_IDS_STRING = 1;
     private static readonly int TARGET_DATASUBSTRINGS_LENGTH = 4;
@@ -20,6 +21,7 @@ public class DataParser
     private static List<int> localPresidentIDs;
     private static int clickPoints;
 
+    private static int _deletesCount = 0;
     public DataParser()
     {
 #if UNITY_EDITOR
@@ -196,7 +198,7 @@ public class DataParser
         }
     }
 
-   
+
 
     public void SaveDataStringInFile()
     {
@@ -219,11 +221,11 @@ public class DataParser
     }
 
     static public int GetPoints()
-    {      
+    {
         return clickPoints;
     }
     static public void SetPoints(int enterPoints)
     {
-        clickPoints += enterPoints;     
+        clickPoints += enterPoints;
     }
 }
