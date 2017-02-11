@@ -191,5 +191,6 @@ public class DataParser
 	{
 		File.Delete (_pathToFile);
 		GooglePlayGames_CloudSystem cloud = new GooglePlayGames_CloudSystem ();
+		cloud.Initialize ();
 	}
 }
