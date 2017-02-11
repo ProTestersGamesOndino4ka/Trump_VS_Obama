@@ -100,9 +100,9 @@ public class LocalRecords : MonoBehaviour
 
 	public static void SetMyPresidents ()
 	{
-		myPresidents = allPresidents.FindAll (x => DataParser.GetLocalPresidentIDs ().Exists (y => y == x.ID));
+		myPresidents = allPresidents.FindAll (x => SaveDataManager.GetLocalPresidentIDs ().Exists (y => y == x.ID));
 		if (myPresidents == null || myPresidents.Count == 0) {
-			DataParser _data = new DataParser ();
+			SaveDataManager _data = new SaveDataManager ();
 			_data.ReadDataFromFile ();
 		}
 	}

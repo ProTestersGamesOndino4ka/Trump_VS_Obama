@@ -72,7 +72,7 @@ public class GoogleAutho : MonoBehaviour, RealTimeMultiplayerListener
 				GooglePlayGames_CloudSystem _cloud = new GooglePlayGames_CloudSystem ();
 				_cloud.Initialize ();
 			} else {
-				DataParser _data = new DataParser ();
+				SaveDataManager _data = new SaveDataManager ();
 				_data.ReadDataFromFile ();
 			}
 		});

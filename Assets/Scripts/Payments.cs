@@ -13,9 +13,9 @@ public class Payments
 	public static void Buy (int presidentID)
 	{
 		//Some Google Play shit
-		DataParser.AddPresidentID (presidentID);
+		SaveDataManager.AddPresidentID (presidentID);
 		GooglePlayGames_CloudSystem cloudSave = new GooglePlayGames_CloudSystem ();
-		cloudSave.SaveDataToCloud (new DataParser ());
+		cloudSave.SaveDataToCloud (new SaveDataManager ());
 	}
 
 }

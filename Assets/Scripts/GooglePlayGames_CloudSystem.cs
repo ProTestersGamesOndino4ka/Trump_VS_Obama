@@ -18,7 +18,7 @@ public class GooglePlayGames_CloudSystem
 
 	public void Initialize ()
 	{
-		DataParser _data = new DataParser ();
+		SaveDataManager _data = new SaveDataManager ();
 		try {
 			LoadDataFromCloud ();
 		} catch (System.Exception ex) {
@@ -38,7 +38,7 @@ public class GooglePlayGames_CloudSystem
 		get{ return Social.Active.localUser.authenticated; }
 	}
 
-	public void SaveDataToCloud (DataParser data)
+	public void SaveDataToCloud (SaveDataManager data)
 	{
 		if (isAuthenticated) {
 			if (loadedDataString != data.GetLocalDataString ()) {
@@ -82,7 +82,7 @@ public class GooglePlayGames_CloudSystem
 		if (status == SavedGameRequestStatus.Success) {
 			Debug.Log ("Game written");
 			Debug.Log ("Game " + game.Description + "written");
-			DataParser data = new DataParser ();
+			SaveDataManager data = new SaveDataManager ();
 			data.SetDataStringFromLoadedString (_saveDataString);
 		} else {
 			Debug.Log ("Game NOT written");
@@ -128,7 +128,7 @@ public class GooglePlayGames_CloudSystem
 			if (data != null) {
 				loadedDataString = FromBytes (data);
 				Debug.Log ("Saved loaded data to loadedDataString = " + loadedDataString);
-				DataParser dataString = new DataParser ();
+				SaveDataManager dataString = new SaveDataManager ();
 				dataString.SetDataStringFromLoadedString (loadedDataString);
 				Debug.Log ("Saved loaded data to loadedDataString" + loadedDataString);				
 			} else {
