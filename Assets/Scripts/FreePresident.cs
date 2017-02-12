@@ -14,72 +14,90 @@ public class FreePresident : MonoBehaviour
 	public GameObject[] presidentImage;
 	public GameObject scrollPanel;
 	public GameObject panelPrize;
-	private GameObject obj;
-	private bool freePresident = false;
+    private GameObject obj;
+	public static bool freePresident = false;
 	public float scrollSpeed = -20;
 	private RaycastHit2D _hit;
-	public Image prize;
-
-    
-
+	public Image prizeImage;
    
-	public void FreePresidentButton ()
-	{
-		if (SaveDataManager.GetPoints () > 99) {
-			gameObject.SetActive (true);
-			freePresident = true;
-			GenerateFreePresident ();
-			SaveDataManager.SetPoints (-100);
-			new GooglePlayGames_CloudSystem ().SaveDataToCloud (new SaveDataManager ());
-		} else {
-			//ShowReklama
-			SaveDataManager.SetPoints (50);
-			new GooglePlayGames_CloudSystem ().SaveDataToCloud (new SaveDataManager ());
-			PlayerPrefs.SetString ("TimeFreePresident", DateTime.Now.ToString ());
-			CloseTab (); 
-		}   
-	}
-
-	public void CloseTab ()
-	{      
-		SceneManager.LoadScene ("free_president");
-	}
-
-	void Start ()
-	{
-		if (PlayerPrefs.GetString ("TimeFreePresident") == string.Empty || PlayerPrefs.GetString ("TimeFreePresident") == null) {
-			PlayerPrefs.SetString ("TimeFreePresident", DateTime.Now.AddMinutes (10).ToString ());
-		}
-
-		CheckCountClickPoints ();
-		Update ();
-	}
-
 	void Update ()
-	{
-         
-		if (Convert.ToDateTime (PlayerPrefs.GetString ("TimeFreePresident")).AddMinutes (10) > DateTime.Now) {
-			GameObject.Find ("Canvas/Text").GetComponent<Text> ().text = Convert.ToString (Convert.ToDateTime (PlayerPrefs.GetString ("TimeFreePresident")).AddMinutes (10) - DateTime.Now);
-		}
-		if (freePresident) {
-			scrollSpeed = Mathf.MoveTowards (scrollSpeed, 0, 2f * Time.deltaTime);
-			scrollPanel.transform.Translate (new Vector2 (scrollSpeed, 0) * Time.deltaTime);
-		}
-		if (scrollSpeed == 0) {
+    { 
+        if (freePresident)
+        {
+            scrollSpeed = Mathf.MoveTowards(scrollSpeed, 0, 2f * Time.deltaTime);
+            scrollPanel.transform.Translate(new Vector2(scrollSpeed, 0) * Time.deltaTime);
+        }           
+        if (scrollSpeed == 0) {
 			_hit = Physics2D.Raycast (Vector2.down, Vector2.up);
-			if (_hit.collider != null) {              
-				prize.sprite = _hit.collider.gameObject.GetComponent<Image> ().sprite;
-				panelPrize.SetActive (true);
-				//Payments.Buy(LocalRecords.allPresidents.Find(X=>X.ImageName == prize.sprite.name).ID);
-			} else {
+			if (_hit.collider != null) {               
+                prizeImage.sprite = _hit.collider.gameObject.GetComponent<Image> ().sprite;
+                panelPrize.SetActive(true);
+                GameObject.Find("Canvas/PanelPrize/PrizeButton/Text").GetComponent<Text>().text = LocalRecords.allPresidents.Find(X=>X.ImageName == prizeImage.sprite.name).LastName;
+                Payments.Buy(LocalRecords.allPresidents.Find(X=>X.ImageName == prizeImage.sprite.name).ID);
+            } else {
 				scrollSpeed = scrollSpeed - 0.1f;
 			}
 		}
 	}
 
-	public void GenerateFreePresident ()
+    public void FreePresidentButton()
+    {
+        if (SaveDataManager.GetPoints() > 99)
+        {
+            GameObject.Find("Canvas/Button_Gift").GetComponent<Animation>().Stop();
+            GameObject.Find("Canvas/TextOpenGift").SetActive(false);
+            GameObject.Find("Canvas/Button_Gift/Particle System").SetActive(false);
+            GameObject.Find("Canvas/TimeAds").SetActive(false);
+            SaveDataManager.SetPoints(-100);
+            GenerationRandomPresident();         
+            new GooglePlayGames_CloudSystem().SaveDataToCloud(new SaveDataManager());          
+        }
+        else
+        {
+            ShowAds();
+            //Не забыть убрать от сюда!!!!!
+            SaveDataManager.SetPoints(50);
+            new GooglePlayGames_CloudSystem().SaveDataToCloud(new SaveDataManager());
+            PlayerPrefs.SetString("TimeFreePresident", DateTime.Now.ToString());
+            CloseTab();
+        }
+    }
+
+    void ShowAds()
+    {
+        IPStatus status = IPStatus.Unknown;
+        try
+        {
+            status = new System.Net.NetworkInformation.Ping().Send("www.google.com").Status;
+        }
+        catch
+        {
+        }
+        if (status == IPStatus.Success)
+        {
+            // Ads.Show();         
+            SaveDataManager.SetPoints(50);
+            new GooglePlayGames_CloudSystem().SaveDataToCloud(new SaveDataManager());
+            CloseTab();
+        }
+        else
+        {
+            //GameObject.Find("Canvas/Text_StatusIP").GetComponent<Text>().text = "нет соединения с интернетом";
+        }
+    }
+
+     public void CloseTab()
+    {
+        SceneManager.LoadScene("free_president");
+    }
+
+
+    public void GenerationRandomPresident ()
 	{
-		for (int i = 0; i < 60; i++) {
+        freePresident = true;      
+        gameObject.SetActive(true);
+       
+        for (int i = 0; i < 40; i++) {
 			int random = UnityEngine.Random.Range (1, 100);
 			int randomPresident = 0;
 			if (random <= 10) {
@@ -107,99 +125,5 @@ public class FreePresident : MonoBehaviour
 			obj.transform.SetParent (scrollPanel.transform);
 			obj.transform.localScale = new Vector2 (1, 1);           
 		}
-	}
-
-	void CheckCountClickPoints ()
-	{
-		if (SaveDataManager.GetPoints () > 99) {
-			GameObject.Find ("Canvas/Button_RandomPresident/Text").GetComponent<Text> ().text = "free president -100 points";
-		} else {
-			GameObject.Find ("Canvas/Button_RandomPresident/Text").GetComponent<Text> ().text = "VIEW ads get 50 points";
-		}
-	}
-
-
-	void Buy ()
-	{
-		IPStatus status = IPStatus.Unknown;
-		try {
-			status = new System.Net.NetworkInformation.Ping ().Send ("www.google.com").Status;
-		} catch {
-		}
-
-		if (status == IPStatus.Success) {
-			//  ShowReklama();
-			GameObject.Find ("Canvas/Text_StatusIP").GetComponent<Text> ().text = "success";
-			//  clickPoints += 200;//ибо 1000 как-то дохера
-			//new GooglePlayGames_CloudSystem().SaveDataToCloud(new DataParser ());
-			CheckCountClickPoints ();
-			//  GameObject.Find("Canvas/Text_ClickPoint").GetComponent<Text>().text = clickPoints.ToString();
-		} else {
-			GameObject.Find ("Canvas/Text_StatusIP").GetComponent<Text> ().text = "нет соединения с интернетом";
-		}
-	}
+	}	
 }
-
-//void Start()
-//{
-//    imageFreePresident = GetComponent<Image>();
-//    GameObject.Find("Canvas/Text_ClickPoint").GetComponent<Text>().text = clickPoints.ToString();
-//    CheckCountClickPoints();
-//}
-
-
-//    public void GetRandomPresident()
-//    {
-//        if (clickPoints > 999)
-//        {
-//            System.Random rnd = new System.Random();
-//            byte random = (byte)rnd.Next(1, 7);
-//            foreach (var resource in LocalPresidentImage._list)
-//            { // Того листа там уже нет. Пока закомментил
-//                if (resource.name == LocalRecords.allPresidents.Find(x => x.ID == random).ImageName)
-//                {
-//                    imageFreePresident.sprite = resource;
-//                }
-//            }
-
-//            if (LocalRecords.records.Any(x => x == random) != true)
-//            {
-//#if UNITY_EDITOR
-//                string path = Application.dataPath + "/" + "records.txt";
-//#else
-//		string path = Application.persistentDataPath + "/" + "records.txt";
-//#endif
-//                using (StreamWriter writer = File.AppendText(path))
-//                    writer.Write(";{0}", random);
-//            }
-//            LocalRecords.ReadFile();
-//            clickPoints = clickPoints - 1000;
-//            GameObject.Find("Canvas/Text_ClickPoint").GetComponent<Text>().text = clickPoints.ToString();
-//            CheckCountClickPoints();
-//        }
-//        else
-//        {
-//            IPStatus status = IPStatus.Unknown;
-//            try
-//            {
-//                status = new System.Net.NetworkInformation.Ping().Send("www.google.com").Status;
-//            }
-//            catch
-//            {
-//            }
-
-//            if (status == IPStatus.Success)
-//            {
-//                ShowReklama();
-//                GameObject.Find("Canvas/Text_StatusIP").GetComponent<Text>().text = "success";
-//                clickPoints += 200;//ибо 1000 как-то дохера
-//                CheckCountClickPoints();
-//                GameObject.Find("Canvas/Text_ClickPoint").GetComponent<Text>().text = clickPoints.ToString();
-//            }
-//            else
-//            {
-//                GameObject.Find("Canvas/Text_StatusIP").GetComponent<Text>().text = "нет соединения с интернетом";
-//            }
-//        }
-//    }
-
