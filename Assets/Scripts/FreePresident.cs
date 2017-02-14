@@ -19,26 +19,31 @@ public class FreePresident : MonoBehaviour
 	public float scrollSpeed = -20;
 	private RaycastHit2D _hit;
 	public Image prizeImage;
-   
-	void Update ()
+    int countCheck  = 0;
+    
+
+    void Update ()
     { 
         if (freePresident)
         {
             scrollSpeed = Mathf.MoveTowards(scrollSpeed, 0, 2f * Time.deltaTime);
             scrollPanel.transform.Translate(new Vector2(scrollSpeed, 0) * Time.deltaTime);
         }           
-        if (scrollSpeed == 0) {
+        if (scrollSpeed == 0 && countCheck == 0) {
+            countCheck++;
 			_hit = Physics2D.Raycast (Vector2.down, Vector2.up);
 			if (_hit.collider != null) {               
                 prizeImage.sprite = _hit.collider.gameObject.GetComponent<Image> ().sprite;
                 panelPrize.SetActive(true);
                 GameObject.Find("Canvas/PanelPrize/PrizeButton/Text").GetComponent<Text>().text = LocalRecords.allPresidents.Find(X=>X.ImageName == prizeImage.sprite.name).LastName;
                 Payments.Buy(LocalRecords.allPresidents.Find(X=>X.ImageName == prizeImage.sprite.name).ID);
+                
             } else {
 				scrollSpeed = scrollSpeed - 0.1f;
 			}
 		}
 	}
+  
 
     public void FreePresidentButton()
     {
