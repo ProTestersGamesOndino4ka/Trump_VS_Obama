@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RaycastToImage : MonoBehaviour
+public class RaycastToEnemyImage : MonoBehaviour
 {
-
 	private RaycastHit2D _hit;
 	public GameObject _objectCastingRay;
 	public Animator animButton;
@@ -20,25 +19,23 @@ public class RaycastToImage : MonoBehaviour
 			ChangePresidentAnimationHandler.isPlayingAnimation = false;
 			animButton.Play (upAnimationClipName);
 			Debug.Log (_presidentImageHittedByRay.sprite.ToString ());
-			LocalPresidentImage.SetCurrentPresidentImage (_presidentImageHittedByRay);
-			if (GameObject.FindGameObjectWithTag ("FlagImage") != null) {
-				FlagHandler.SetFlagSprite (_presidentImageHittedByRay.sprite.name);
-			} else {
-				Debug.LogWarning ("FlagImage doesn't exists!");
-			}
+			EnemyPresidentImage.SetCurrentPresidentImage (_presidentImageHittedByRay);
 		}
 	}
 
 	public Image GetImageHittedByRay ()
 	{
-		_objectCastingRay = GameObject.FindGameObjectWithTag ("RayObject");
+		if (_objectCastingRay == null) {
+			_objectCastingRay = GameObject.FindGameObjectWithTag ("RayObject_enemy");
+		}
 		if (_objectCastingRay != null) {
 			_hit = Physics2D.Raycast (_objectCastingRay.transform.position, -Vector2.up);
 			_presidentImageHittedByRay = _hit.transform.gameObject.GetComponent<Image> ();
 			return _presidentImageHittedByRay;
 		} else {
+			Debug.LogWarning ("LOGGER_RayObject_enemy_is_null");
 			return null;
+
 		}
 	}
-
 }

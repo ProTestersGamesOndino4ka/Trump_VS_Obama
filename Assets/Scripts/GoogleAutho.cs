@@ -54,7 +54,6 @@ public class GoogleAutho : MonoBehaviour, RealTimeMultiplayerListener
 
 	void Awake ()
 	{
-		GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text = "Before config";
 		try {
 			PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder ()
 				.EnableSavedGames ()
@@ -65,10 +64,8 @@ public class GoogleAutho : MonoBehaviour, RealTimeMultiplayerListener
 			Debug.LogWarning ("Unhandled exception on config Initializing" + ex.Message);
 		}
 		Social.localUser.Authenticate ((bool success) => {
-			GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\n" + success;
 			Debug.Log (success);
 			if (success) {
-				GameObject.FindGameObjectWithTag ("DebugText").GetComponent<Text> ().text += "\nActivation";
 				GooglePlayGames_CloudSystem _cloud = new GooglePlayGames_CloudSystem ();
 				_cloud.Initialize ();
 			} else {

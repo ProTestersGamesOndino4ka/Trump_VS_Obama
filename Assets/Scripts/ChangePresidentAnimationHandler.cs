@@ -7,6 +7,9 @@ public class ChangePresidentAnimationHandler : MonoBehaviour
 {
 
 	public Animator anim;
+	public Animator animButton;
+	public static bool isPlayingAnimation;
+	public string downAnimationClipName;
 
 	public void SetPosition (int _pos)
 	{
@@ -15,6 +18,7 @@ public class ChangePresidentAnimationHandler : MonoBehaviour
 
 	public void NextImageAnimation ()
 	{
+		isPlayingAnimation = true;
 		switch (anim.GetInteger ("position")) {
 		case 0:
 			anim.SetInteger ("position", 1);
@@ -44,13 +48,19 @@ public class ChangePresidentAnimationHandler : MonoBehaviour
 			anim.SetInteger ("position", 9);
 			break;
 		default:
+			isPlayingAnimation = false;
 			break;
 		}
 		Debug.Log ("Position " + anim.GetInteger ("position"));
+		if (isPlayingAnimation) {
+			animButton.Play (downAnimationClipName);
+		}
+
 	}
 
 	public void PrevImageAnimation ()
 	{
+		isPlayingAnimation = true;
 		switch (anim.GetInteger ("position")) {
 		case 1:
 			anim.SetInteger ("position", 0);
@@ -80,8 +90,12 @@ public class ChangePresidentAnimationHandler : MonoBehaviour
 			anim.SetInteger ("position", 8);
 			break;
 		default:
+			isPlayingAnimation = false;
 			break;
 		}
 		Debug.Log ("Position " + anim.GetInteger ("position"));
+		if (isPlayingAnimation) {
+			animButton.Play (downAnimationClipName);
+		}
 	}
 }

@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LocalPresidentImage : MonoBehaviour
+public class EnemyPresidentImage : MonoBehaviour
 {
-
 	private static Image _currentPresidentImage;
 	private static bool isFree = false;
 	private static readonly string NO_PRICE_TEXT = "START";
@@ -26,10 +25,10 @@ public class LocalPresidentImage : MonoBehaviour
 	{
 		if (_currentPresidentImage != null) {
 			if (LocalRecords.myPresidents.Exists (x => x.ImageName == _currentPresidentImage.sprite.name)) {
-				GameObject.FindGameObjectWithTag ("StartBuyButton").GetComponentInChildren<Text> ().text = NO_PRICE_TEXT;
+				GameObject.FindGameObjectWithTag ("StartButton_enemy").GetComponentInChildren<Text> ().text = NO_PRICE_TEXT;
 				isFree = true;
 			} else {
-				GameObject.FindGameObjectWithTag ("StartBuyButton").GetComponentInChildren<Text> ().text = LocalRecords.allPresidents.Find (x => x.ImageName == _currentPresidentImage.sprite.name).Price;
+				GameObject.FindGameObjectWithTag ("StartButton_enemy").GetComponentInChildren<Text> ().text = LocalRecords.allPresidents.Find (x => x.ImageName == _currentPresidentImage.sprite.name).Price;
 				isFree = false;
 			}
 		} else {
@@ -42,14 +41,10 @@ public class LocalPresidentImage : MonoBehaviour
 
 	public void OnStartBuyButtonClick ()
 	{
-		if (!ChangePresidentAnimationHandler.isPlayingAnimation) {
-			if (isFree) {
-				Debug.Log ("Playing");
-			} else {
-				Payments.Buy (LocalRecords.allPresidents.Find (x => x.ImageName == _currentPresidentImage.sprite.name).ID);
-			}
-		}
-	}
+		if (!ChangePresidentAnimationHandler.isPlayingAnimation && isFree) {
+			Debug.Log ("Playing");
+		} 
 
+	}
 
 }
