@@ -16,7 +16,7 @@ public class LocalRecords : MonoBehaviour
 	{
 		allPresidents = new List<President> () {
 			new President () {
-				ID = 1,
+				ID = "2655E62",
 				LastName = "Obama",
 				Country = "USE",
 				Price = "$0.99",
@@ -24,7 +24,7 @@ public class LocalRecords : MonoBehaviour
 				FlagName = "flag_usa"
 			},
 			new President () {
-				ID = 2,
+				ID = "7789KL2",
 				LastName = "Putin",
 				Country = "Russia",
 				Price = "$0.99",
@@ -32,7 +32,7 @@ public class LocalRecords : MonoBehaviour
 				FlagName = "flag_rus"
 			},
 			new President () {
-				ID = 3,
+				ID = "1524SD6",
 				LastName = "Trump",
 				Country = "USA",
 				Price = "$0.99",
@@ -40,7 +40,7 @@ public class LocalRecords : MonoBehaviour
 				FlagName = "flag_usa"
 			},
 			new President () {
-				ID = 4,
+				ID = "4452J00",
 				LastName = "Abe",
 				Country = "Japan",
 				Price = "$0.99",
@@ -48,7 +48,7 @@ public class LocalRecords : MonoBehaviour
 				FlagName = "flag_jp"
 			},
 			new President () {
-				ID = 5,
+				ID = "DE5514L",
 				LastName = "Merkel",
 				Country = "Germany",
 				Price = "$0.99",
@@ -56,7 +56,7 @@ public class LocalRecords : MonoBehaviour
 				FlagName = "flag_de"
 			},
 			new President () {
-				ID = 6,
+				ID = "B12E45L",
 				LastName = "Lukashenko",
 				Country = "Belarus",
 				Price = "$0.99",
@@ -64,7 +64,7 @@ public class LocalRecords : MonoBehaviour
 				FlagName = "flag_bel"
 			},
 			new President () {
-				ID = 7,
+				ID = "2014TR3",
 				LastName = "Erdogan",
 				Country = "Turkey",
 				Price = "$0.99",
@@ -72,7 +72,7 @@ public class LocalRecords : MonoBehaviour
 				FlagName = "flag_turk"
 			},
 			new President () {
-				ID = 8,
+				ID = "15F14R9",
 				LastName = "Olland",
 				Country = "France",
 				Price = "$0.99",
@@ -80,7 +80,7 @@ public class LocalRecords : MonoBehaviour
 				FlagName = "flag_fr"
 			},
 			new President () {
-				ID = 9,
+				ID = "22M69X2",
 				LastName = "Pena Nieto",
 				Country = "Mexico",
 				Price = "$0.99",
@@ -88,7 +88,7 @@ public class LocalRecords : MonoBehaviour
 				FlagName = "flag_mexica"
 			},
 			new President () {
-				ID = 10,
+				ID = "02G89B3",
 				LastName = "Elizabeth II",
 				Country = "Great Britain",
 				Price = "$0.99",
@@ -98,13 +98,30 @@ public class LocalRecords : MonoBehaviour
 		}; 
 	}
 
-	public static void SetMyPresidents ()
+	public static bool SetMyPresidents ()
 	{
-		myPresidents = allPresidents.FindAll (x => SaveDataManager.GetLocalPresidentIDs ().Exists (y => y == x.ID));
-		if (myPresidents == null || myPresidents.Count == 0) {
-			SaveDataManager _data = new SaveDataManager ();
-			_data.ReadDataFromFile ();
+		if (allPresidents != null) {
+			try {
+
+				myPresidents = allPresidents.FindAll (x => SaveDataManager.GetLocalPresidentIDs ().Exists (y => y == x.ID));
+				if (myPresidents == null || myPresidents.Count == 0) {
+					return false;
+				}
+				/*LoadingText.AddText ("Loaded presidents:");
+				foreach (var item in myPresidents) {
+					LoadingText.AddText (item.LastName);
+				}*/
+				return true;
+			} catch (NullReferenceException) {
+				return false;
+			}
+		} else {
+			new LocalRecords ().Awake ();
+			return false;
 		}
+
+
+
 	}
 
 }

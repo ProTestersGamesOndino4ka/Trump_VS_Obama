@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 public class SaveDataManager
 {
@@ -13,13 +14,13 @@ public class SaveDataManager
 	private static readonly int INDEX_OF_PRESIDENT_IDS_STRING = 1;
 	private static readonly int TARGET_DATASUBSTRINGS_LENGTH = 4;
 	private static readonly int INDEX_OF_MAXSCORE_STRING = 3;
-	private static readonly string SAMPLE_DATA_STRING = "\"localPresidents\":1;2;3,\"recordScore\":0";
+	private static readonly string SAMPLE_DATA_STRING = "\"localPresidents\":2655E62;1524SD6,\"recordScore\":0";
 
 	private static int _deletesCount = 0;
 
 	private static string _dataString;
 	private static string _pathToFile;
-	private static List<int> localPresidentIDs;
+	private static List<string> localPresidentIDs;
 	private static int clickPoints;
 
 	public SaveDataManager ()
@@ -81,9 +82,11 @@ public class SaveDataManager
 				return;
 			}
 			try {
-				localPresidentIDs = dataSubstrings [INDEX_OF_PRESIDENT_IDS_STRING].Split (';').Select (s => int.Parse (s)).ToList<int> ();
+				localPresidentIDs = dataSubstrings [INDEX_OF_PRESIDENT_IDS_STRING].Split (';').ToList<string> ();
 				Debug.Log (" IDS: " + string.Join (";", localPresidentIDs.Select (x => x.ToString ()).ToArray<string> ()));
-				LocalRecords.SetMyPresidents ();
+				if (!LocalRecords.SetMyPresidents ()) {
+					throw new FormatException ();
+				}
 				Debug.Log ("Set local presidents");
 				LocalPresidentImage.SetCurrentPresidentImage (LocalPresidentImage.GetCurrentPresidentImage ());
 				Debug.Log ("Set price");
@@ -142,7 +145,7 @@ public class SaveDataManager
 	}
 
 
-	public static List<int> GetLocalPresidentIDs ()
+	public static List<string> GetLocalPresidentIDs ()
 	{
 		return localPresidentIDs;
 	}
@@ -152,7 +155,7 @@ public class SaveDataManager
 		return clickPoints;
 	}
 
-	public static void AddPresidentID (int boughtPresidentID)
+	public static void AddPresidentID (string boughtPresidentID)
 	{
 		if (localPresidentIDs != null) {
 			if (localPresidentIDs.Contains (boughtPresidentID)) {
@@ -211,5 +214,17 @@ public class SaveDataManager
 	static public void SetPoints (int enterPoints)
 	{
 		clickPoints += enterPoints;
+	}
+
+	public static byte[] ToBytes (string message)
+	{
+		byte[] bytes = Encoding.UTF8.GetBytes (message);
+		return bytes;
+	}
+
+	public static string FromBytes (byte[] bytes)
+	{
+		string saveString = Encoding.UTF8.GetString (bytes);
+		return saveString;
 	}
 }

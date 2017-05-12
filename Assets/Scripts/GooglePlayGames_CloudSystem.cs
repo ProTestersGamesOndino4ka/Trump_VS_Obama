@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SocialPlatforms;
@@ -63,7 +62,7 @@ public class GooglePlayGames_CloudSystem
 	{
 		if (status == SavedGameRequestStatus.Success && !string.IsNullOrEmpty (_saveDataString)) {
 			Debug.Log ("Good status");
-			byte[] savingData = ToBytes (_saveDataString);
+			byte[] savingData = SaveDataManager.ToBytes (_saveDataString);
 			Debug.Log ("bytes ");
 			SavedGameMetadataUpdate.Builder builder = new SavedGameMetadataUpdate.Builder ();
 			SavedGameMetadataUpdate updateMetadata = builder.Build ();
@@ -126,7 +125,7 @@ public class GooglePlayGames_CloudSystem
 		if (status == SavedGameRequestStatus.Success) {
 			Debug.Log ("Data load seccess");
 			if (data != null) {
-				loadedDataString = FromBytes (data);
+				loadedDataString = SaveDataManager.FromBytes (data);
 				Debug.Log ("Saved loaded data to loadedDataString = " + loadedDataString);
 				SaveDataManager dataString = new SaveDataManager ();
 				dataString.SetDataStringFromLoadedString (loadedDataString);
@@ -144,17 +143,7 @@ public class GooglePlayGames_CloudSystem
 		return loadedDataString;
 	}
 
-	private byte[] ToBytes (string message)
-	{
-		byte[] bytes = Encoding.UTF8.GetBytes (message);
-		return bytes;
-	}
 
-	private string FromBytes (byte[] bytes)
-	{
-		string saveString = Encoding.UTF8.GetString (bytes);
-		return saveString;
-	}
 
 
 	public static void ShowSelectUI ()

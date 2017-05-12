@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TimersHundler : MonoBehaviour
+public class TimersHandler : MonoBehaviour
 {
 
 	public GameObject stratButton;
