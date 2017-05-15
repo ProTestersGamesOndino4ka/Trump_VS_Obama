@@ -3,14 +3,14 @@ using UnityEngine.SceneManagement;
 
 public class GameMode : MonoBehaviour
 {
-	public void LoadLocalGameMode ()
+	public void LoadLocalGameMode()
 	{
-		SceneManager.LoadScene ("scene_local");
+		LoadScene.LoadLocalGameScene();
 	}
 
-	public void LoadOnlineGameMode ()
+	public void LoadOnlineGameMode()
 	{
-		SceneManager.LoadScene ("scene_online");
+		LoadScene.LoadOnlineGameScene();
 	}
 
 

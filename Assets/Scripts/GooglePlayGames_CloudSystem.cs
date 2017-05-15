@@ -12,24 +12,25 @@ public class GooglePlayGames_CloudSystem
 
 	private const string SAVE_NAME = "game_save";
 
-	private string _saveDataString;
-	private static string loadedDataString;
-
-	public void Initialize ()
+	public void Initialize()
 	{
-		SaveDataManager _data = new SaveDataManager ();
-		try {
-			LoadDataFromCloud ();
-		} catch (System.Exception ex) {
-			Debug.LogWarning ("Unhandled exception " + ex.Message);
-			if (string.IsNullOrEmpty (loadedDataString)) {			
-				_data.ReadDataFromFile ();
-			} else {
-				_data.SetDataStringFromLoadedString (loadedDataString);
+		SaveDataManager dataManager = new SaveDataManager();
+
+		if(!isAuthenticated)
+		{			
+			try
+			{
+				LoadDataFromCloud();
+				dataManager.ReadDataFromCloud();
+			}
+			catch (System.Exception)
+			{
+				dataManager.ReadDataFromFile();
 			}
 		}
-		if (!isAuthenticated) {
-			_data.ReadDataFromFile ();
+		else
+		{
+			dataManager.ReadDataFromFile();
 		}
 	}
 
@@ -37,123 +38,132 @@ public class GooglePlayGames_CloudSystem
 		get{ return Social.Active.localUser.authenticated; }
 	}
 
-	public void SaveDataToCloud (SaveDataManager data)
-	{
-		if (isAuthenticated) {
-			if (loadedDataString != data.GetLocalDataString ()) {
-				_saveDataString = data.GetLocalDataString ();
-				data.SaveDataStringInFile ();
-				try {
-					((PlayGamesPlatform)Social.Active).SavedGame.OpenWithAutomaticConflictResolution (
-						SAVE_NAME,
-						DataSource.ReadCacheOrNetwork,
-						ConflictResolutionStrategy.UseLongestPlaytime,
-						SaveData
-					);
-				} catch (System.Exception ex) {
-					Debug.LogWarning ("Same loaded string as file" + ex.Message);
-				}
-
-			}
-		}
-	}
-
-	private void SaveData (SavedGameRequestStatus status, ISavedGameMetadata game)
-	{
-		if (status == SavedGameRequestStatus.Success && !string.IsNullOrEmpty (_saveDataString)) {
-			Debug.Log ("Good status");
-			byte[] savingData = SaveDataManager.ToBytes (_saveDataString);
-			Debug.Log ("bytes ");
-			SavedGameMetadataUpdate.Builder builder = new SavedGameMetadataUpdate.Builder ();
-			SavedGameMetadataUpdate updateMetadata = builder.Build ();
-			Debug.Log ("Builders");
-			((PlayGamesPlatform)Social.Active).SavedGame.CommitUpdate (
-				game,
-				updateMetadata,
-				savingData,
-				SavedDataWritten
+	public void SaveDataToCloud(SaveDataManager data)
+	{		
+		/*if(loadedDataString != data.GetLocalDataString())
+		{
+			_saveDataString = data.GetLocalDataString();
+			data.SaveDataStringInFile();*/
+		try
+		{
+			((PlayGamesPlatform)Social.Active).SavedGame.OpenWithAutomaticConflictResolution(
+				SAVE_NAME,
+				DataSource.ReadCacheOrNetwork,
+				ConflictResolutionStrategy.UseLongestPlaytime,
+				SaveData
 			);
 		}
+		catch (System.Exception ex)
+		{
+			Debug.LogWarning("Error on SaveDataToCloud; Same loaded string as file; " + ex.Message);
+		}
+
+		//}
 	}
 
-	private void SavedDataWritten (SavedGameRequestStatus status, ISavedGameMetadata game)
+	private void SaveData(SavedGameRequestStatus status, ISavedGameMetadata game)
 	{
-		if (status == SavedGameRequestStatus.Success) {
-			Debug.Log ("Game written");
-			Debug.Log ("Game " + game.Description + "written");
-			SaveDataManager data = new SaveDataManager ();
-			data.SetDataStringFromLoadedString (_saveDataString);
-		} else {
-			Debug.Log ("Game NOT written");
-			Debug.LogWarning ("Error saving game: " + status);
+		//if(status == SavedGameRequestStatus.Success && !string.IsNullOrEmpty(_saveDataString))
+		//{
+		Debug.Log("Good status");
+		byte[] savingData = SaveDataManager.EncryptStringToBytes("_saveDataString");
+		Debug.Log("bytes ");
+		SavedGameMetadataUpdate.Builder builder = new SavedGameMetadataUpdate.Builder();
+		SavedGameMetadataUpdate updateMetadata = builder.Build();
+		Debug.Log("Builders");
+		((PlayGamesPlatform)Social.Active).SavedGame.CommitUpdate(
+			game,
+			updateMetadata,
+			savingData,
+			SavedDataWritten
+		);
+		//}
+	}
+
+	private void SavedDataWritten(SavedGameRequestStatus status, ISavedGameMetadata game)
+	{
+		if(status == SavedGameRequestStatus.Success)
+		{
+			Debug.Log("Game written");
+			Debug.Log("Game " + game.Description + "written");
+			SaveDataManager data = new SaveDataManager();
+		}
+		else
+		{
+			Debug.Log("Game NOT written");
+			Debug.LogWarning("Error saving game: " + status);
 		}
 	}
 
-	public void LoadDataFromCloud ()
+	public void LoadDataFromCloud()
 	{		
-		Debug.Log ("Try Load from cloud");
-		if (isAuthenticated) {
-			Debug.Log ("Auth");
-			Debug.Log ("Loading data from cloud");
-			try {
+		Debug.Log("Try Load from cloud");
+		if(isAuthenticated)
+		{
+			Debug.Log("Auth");
+			Debug.Log("Loading data from cloud");
+			try
+			{
 
-				((PlayGamesPlatform)Social.Active).SavedGame.OpenWithAutomaticConflictResolution (
+				((PlayGamesPlatform)Social.Active).SavedGame.OpenWithAutomaticConflictResolution(
 					SAVE_NAME,
 					DataSource.ReadCacheOrNetwork,
 					ConflictResolutionStrategy.UseLongestPlaytime,
 					LoadData
 				);	
-			} catch (System.Exception ex) {
-				Debug.Log ("" + ex.Message);
 			}
-		} else {
-			Debug.Log ("Not authenticated");
+			catch (System.Exception ex)
+			{
+				Debug.Log("" + ex.Message);
+			}
+		}
+		else
+		{
+			Debug.Log("Not authenticated");
 		}
 	}
 
-	private void LoadData (SavedGameRequestStatus status, ISavedGameMetadata game)
+	private void LoadData(SavedGameRequestStatus status, ISavedGameMetadata game)
 	{
-		Debug.Log ("try load data");
-		((PlayGamesPlatform)Social.Active).SavedGame.ReadBinaryData (
+		Debug.Log("try load data");
+		((PlayGamesPlatform)Social.Active).SavedGame.ReadBinaryData(
 			game,
 			SavedDataLoaded
 		);
 	}
 
-	private void SavedDataLoaded (SavedGameRequestStatus status, byte[] data)
+	private void SavedDataLoaded(SavedGameRequestStatus status, byte[] data)
 	{
-		if (status == SavedGameRequestStatus.Success) {
-			Debug.Log ("Data load seccess");
-			if (data != null) {
-				loadedDataString = SaveDataManager.FromBytes (data);
-				Debug.Log ("Saved loaded data to loadedDataString = " + loadedDataString);
-				SaveDataManager dataString = new SaveDataManager ();
-				dataString.SetDataStringFromLoadedString (loadedDataString);
-				Debug.Log ("Saved loaded data to loadedDataString" + loadedDataString);				
-			} else {
-				Debug.LogWarning ("Loading data is NULL!");
+		if(status == SavedGameRequestStatus.Success)
+		{
+			Debug.Log("Data load seccess");
+			if(data != null)
+			{
+				SaveDataManager.SetCloudData(data);		
 			}
-		} else {
-			Debug.LogWarning ("Error loading data from cloud!");
+			else
+			{
+				Debug.LogWarning("Loading data is NULL!");
+			}
+		}
+		else
+		{
+			Debug.LogWarning("Error loading data from cloud!");
 		}
 	}
 
-	public static string GetLoadedDataString ()
-	{
-		return loadedDataString;
-	}
 
 
 
 
-	public static void ShowSelectUI ()
+	public static void ShowSelectUI()
 	{
 		uint maxNumToDisplay = 5;
 		bool allowCreateNew = true;
 		bool allowDelete = true;
 
 		ISavedGameClient saveGameClient = PlayGamesPlatform.Instance.SavedGame;
-		saveGameClient.ShowSelectSavedGameUI (
+		saveGameClient.ShowSelectSavedGameUI(
 			"Saved Games",
 			maxNumToDisplay,
 			allowCreateNew,
@@ -162,12 +172,15 @@ public class GooglePlayGames_CloudSystem
 		);
 	}
 
-	static void OnSavedGameSelected (SelectUIStatus status, ISavedGameMetadata game)
+	static void OnSavedGameSelected(SelectUIStatus status, ISavedGameMetadata game)
 	{
-		if (status == SelectUIStatus.SavedGameSelected) {
-			Debug.Log ("selected game" + game.Description);
-		} else {
-			Debug.Log ("Error by selected game");
+		if(status == SelectUIStatus.SavedGameSelected)
+		{
+			Debug.Log("selected game" + game.Description);
+		}
+		else
+		{
+			Debug.Log("Error by selected game");
 		}
 	}
 }

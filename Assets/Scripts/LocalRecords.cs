@@ -9,13 +9,13 @@ using UnityEngine.UI;
 public class LocalRecords : MonoBehaviour
 {
 
-	public static  List<President> myPresidents = new List<President> ();
+	public static  List<President> myPresidents = new List<President>();
 	public static  List<President> allPresidents;
 
-	void Awake ()
+	void Awake()
 	{
-		allPresidents = new List<President> () {
-			new President () {
+		allPresidents = new List<President>() {
+			new President() {
 				ID = "2655E62",
 				LastName = "Obama",
 				Country = "USE",
@@ -23,7 +23,7 @@ public class LocalRecords : MonoBehaviour
 				ImageName = "obama",
 				FlagName = "flag_usa"
 			},
-			new President () {
+			new President() {
 				ID = "7789KL2",
 				LastName = "Putin",
 				Country = "Russia",
@@ -31,7 +31,7 @@ public class LocalRecords : MonoBehaviour
 				ImageName = "putin",
 				FlagName = "flag_rus"
 			},
-			new President () {
+			new President() {
 				ID = "1524SD6",
 				LastName = "Trump",
 				Country = "USA",
@@ -39,7 +39,7 @@ public class LocalRecords : MonoBehaviour
 				ImageName = "trump",
 				FlagName = "flag_usa"
 			},
-			new President () {
+			new President() {
 				ID = "4452J00",
 				LastName = "Abe",
 				Country = "Japan",
@@ -47,7 +47,7 @@ public class LocalRecords : MonoBehaviour
 				ImageName = "abe",
 				FlagName = "flag_jp"
 			},
-			new President () {
+			new President() {
 				ID = "DE5514L",
 				LastName = "Merkel",
 				Country = "Germany",
@@ -55,7 +55,7 @@ public class LocalRecords : MonoBehaviour
 				ImageName = "merkel",
 				FlagName = "flag_de"
 			},
-			new President () {
+			new President() {
 				ID = "B12E45L",
 				LastName = "Lukashenko",
 				Country = "Belarus",
@@ -63,7 +63,7 @@ public class LocalRecords : MonoBehaviour
 				ImageName = "batska",
 				FlagName = "flag_bel"
 			},
-			new President () {
+			new President() {
 				ID = "2014TR3",
 				LastName = "Erdogan",
 				Country = "Turkey",
@@ -71,7 +71,7 @@ public class LocalRecords : MonoBehaviour
 				ImageName = "erdogan",
 				FlagName = "flag_turk"
 			},
-			new President () {
+			new President() {
 				ID = "15F14R9",
 				LastName = "Olland",
 				Country = "France",
@@ -79,7 +79,7 @@ public class LocalRecords : MonoBehaviour
 				ImageName = "olland",
 				FlagName = "flag_fr"
 			},
-			new President () {
+			new President() {
 				ID = "22M69X2",
 				LastName = "Pena Nieto",
 				Country = "Mexico",
@@ -87,7 +87,7 @@ public class LocalRecords : MonoBehaviour
 				ImageName = "pena_nieto",
 				FlagName = "flag_mexica"
 			},
-			new President () {
+			new President() {
 				ID = "02G89B3",
 				LastName = "Elizabeth II",
 				Country = "Great Britain",
@@ -98,26 +98,37 @@ public class LocalRecords : MonoBehaviour
 		}; 
 	}
 
-	public static bool SetMyPresidents ()
+	public static bool SetMyPresidents()
 	{
-		if (allPresidents != null) {
-			try {
+		if(allPresidents != null)
+		{
+			try
+			{
 
-				myPresidents = allPresidents.FindAll (x => SaveDataManager.GetLocalPresidentIDs ().Exists (y => y == x.ID));
-				if (myPresidents == null || myPresidents.Count == 0) {
+				myPresidents = allPresidents.FindAll(x => SaveDataManager.GetLocalPresidentIDs().Exists(y => y == x.ID));
+				if(myPresidents == null || myPresidents.Count == 0)
+				{
 					return false;
 				}
-				/*LoadingText.AddText ("Loaded presidents:");
-				foreach (var item in myPresidents) {
-					LoadingText.AddText (item.LastName);
-				}*/
+
+				//mark to delete
+				LoadingText.AddText("Loaded presidents:");
+				foreach (var item in myPresidents)
+				{
+					LoadingText.AddText(item.LastName);
+				}
+
 				return true;
-			} catch (NullReferenceException) {
+			}
+			catch (NullReferenceException)
+			{
 				return false;
 			}
-		} else {
-			new LocalRecords ().Awake ();
-			return false;
+		}
+		else
+		{
+			new LocalRecords().Awake();
+			return SetMyPresidents();
 		}
 
 

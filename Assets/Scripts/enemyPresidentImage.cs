@@ -8,81 +8,119 @@ public class EnemyPresidentImage : MonoBehaviour
 {
 	public static bool isReady{ get; private set; }
 
-	public Animator start_button_anim;
 	private static Image _currentPresidentImage;
 	private static bool isFree = false;
 	private static readonly string NO_PRICE_TEXT = "START";
+	private static readonly Color notReadyColor = new Color32(0, 55, 255, 160);
+	private static readonly Color readyColor = new Color32(0, 255, 30, 160);
+	private static readonly Color loseColor = new Color32(255, 0, 0, 160);
 
-	void Start ()
+	void Start()
 	{
 		isReady = false;
 	}
 
-	public static void SetCurrentPresidentImage (Image presidentImage)
+	public static void SetCurrentPresidentImage(Image presidentImage)
 	{
 		_currentPresidentImage = presidentImage;
-		SetPriceToButton ();
+		SetPriceToButton();
 	}
 
-	public static Image GetCurrentPresidentImage ()
+	public static Image GetCurrentPresidentImage()
 	{
 		return _currentPresidentImage;
 	}
 
-	private static void SetPriceToButton ()
+	private static void SetPriceToButton()
 	{
-		if (_currentPresidentImage != null) {
-			if (LocalRecords.myPresidents.Exists (x => x.ImageName == _currentPresidentImage.sprite.name)) {
-				GameObject.FindGameObjectWithTag ("StartButton_enemy").GetComponentInChildren<Text> ().text = NO_PRICE_TEXT;
+		if(_currentPresidentImage != null)
+		{
+			if(LocalRecords.myPresidents.Exists(x => x.ImageName == _currentPresidentImage.sprite.name))
+			{
+				SetTextToStartButton(NO_PRICE_TEXT);
 				isFree = true;
 
-			} else {
-				GameObject.FindGameObjectWithTag ("StartButton_enemy").GetComponentInChildren<Text> ().text = LocalRecords.allPresidents.Find (x => x.ImageName == _currentPresidentImage.sprite.name).Price;
+			}
+			else
+			{
+				SetTextToStartButton(LocalRecords.allPresidents.Find(x => x.ImageName == _currentPresidentImage.sprite.name).Price);
 				isFree = false;
 			}
-		} else {
-			Image tempPresidentImage = new RaycastToImage ().GetImageHittedByRay ();	
-			if (tempPresidentImage != null) {
-				SetCurrentPresidentImage (tempPresidentImage);
+		}
+		else
+		{
+			Image tempPresidentImage = new RaycastToImage().GetImageHittedByRay();	
+			if(tempPresidentImage != null)
+			{
+				SetCurrentPresidentImage(tempPresidentImage);
 			}
 		}
 	}
 
-	public void OnStartBuyButtonClick ()
+
+	public static void SetTextToStartButton(string text)
 	{
-		if (!ChangePresidentAnimationHandler.isPlayingAnimation && isFree) {
-			Debug.Log ("Playing");
-			ScorePanelAnimationHandler.SetStart (GameObject.Find ("Panel_enemy_score").GetComponent<Animator> (), true);
-			SetButtonsActive (false);
-			if (!isReady) {
+		GameObject.FindGameObjectWithTag("StartButton_enemy").GetComponentInChildren<Text>().text = text;
+	}
+
+	public void OnStartBuyButtonClick()
+	{
+		if(!ChangePresidentAnimationHandler.isPlayingAnimation && isFree)
+		{
+			Debug.Log("Playing");
+			SetButtonsActiveState(false);
+			if(!isReady)
+			{
 				isReady = true;
+				SetReadyButtonColor();
+				if(LocalPresidentImage.isReady)
+				{
+					CountdownTimer.StartCountdown();
+				}
 			}
 		} 
 
 	}
 
-	private void SetButtonsActive (bool value)
+	private void SetButtonsActiveState(bool value)
 	{
-		GameObject.Find ("Prev_enemy").GetComponent<Animator> ().SetBool ("isActive", value);
-		GameObject.Find ("Next_enemy").GetComponent<Animator> ().SetBool ("isActive", value);
-		if (!value) {
-			start_button_anim.Play ("fall_down");
-		} else {
-			start_button_anim.Play ("fall_up");
+		GameObject.Find("Prev_enemy").GetComponent<Animator>().SetBool("isActive", value);
+		GameObject.Find("Next_enemy").GetComponent<Animator>().SetBool("isActive", value);
+	}
+
+	private void SetReadyButtonColor()
+	{
+		GameObject.Find("StartBuyButton_enemy").GetComponent<Image>().color = readyColor; 
+	}
+
+	private void SetNotReadyButtonColor()
+	{
+		GameObject.Find("StartBuyButton_enemy").GetComponent<Image>().color = notReadyColor; 
+	}
+
+	public void onTap()
+	{
+		
+		if(GameTimer.isTimerStarted)
+		{
+			ScoreHandler.IncreaseEnemyScore();
 		}
 	}
 
-	public void onTap ()
+	public static void onLose()
 	{
-		
-		if (LocalPresidentImage.isReady) {
-			if (!Timer.isTimerStarted) {
-				Timer.StartTimer (10);
-				new TimersHandler ().OnSide1Click ();
-			} else {
-				new TimersHandler ().OnSide1Click ();	
-			}
-		}
+		GameObject.Find("StartBuyButton_enemy").GetComponent<Image>().color = loseColor; 
+		SetTextToStartButton("LOSE");
+	}
+
+	public static void onWin()
+	{
+		SetTextToStartButton("WIN");
+	}
+
+	public static void onDraw()
+	{
+		SetTextToStartButton("DRAW");
 	}
 
 }
