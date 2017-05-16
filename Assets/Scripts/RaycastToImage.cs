@@ -18,7 +18,7 @@ public class RaycastToImage : MonoBehaviour
 		{
 			ChangePresidentAnimationHandler.isPlayingAnimation = false;
 			Debug.Log(_presidentImageHittedByRay.sprite.ToString());
-			LocalPresidentImage.SetCurrentPresidentImage(_presidentImageHittedByRay);
+			LocalPresident.SetCurrentPresidentImage(_presidentImageHittedByRay);
 			if(GameObject.FindGameObjectWithTag("FlagImage") != null)
 			{
 				FlagHandler.SetFlagSprite(_presidentImageHittedByRay.sprite.name);

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EnemyPresidentImage : MonoBehaviour
+public class EnemyPresident : MonoBehaviour
 {
 	public static bool isReady{ get; private set; }
 
@@ -73,7 +73,7 @@ public class EnemyPresidentImage : MonoBehaviour
 			{
 				isReady = true;
 				SetReadyButtonColor();
-				if(LocalPresidentImage.isReady)
+				if(LocalPresident.isReady)
 				{
 					CountdownTimer.StartCountdown();
 				}

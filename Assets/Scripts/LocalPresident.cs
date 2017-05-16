@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LocalPresidentImage : MonoBehaviour
+public class LocalPresident : MonoBehaviour
 {
 	public static bool isReady{ get; private set; }
 
@@ -68,12 +68,12 @@ public class LocalPresidentImage : MonoBehaviour
 			if(isFree)
 			{
 				Debug.Log("Playing");
-				SetButtonsActiveState(false);
+				SetSideButtonsActiveState(false);
 				if(!isReady)
 				{
 					isReady = true;
 					SetReadyButtonColor();
-					if(EnemyPresidentImage.isReady)
+					if(EnemyPresident.isReady)
 					{
 						CountdownTimer.StartCountdown();
 					}
@@ -86,20 +86,48 @@ public class LocalPresidentImage : MonoBehaviour
 		}
 	}
 
-	public void SetButtonsActiveState(bool value)
+	public void OnMultiplayerStartBuyButtonClick()
+	{
+		if(!ChangePresidentAnimationHandler.isPlayingAnimation)
+		{
+			if(isFree)
+			{
+				Debug.Log("Playing");
+				SetSideButtonsActiveState(false);
+				if(!isReady)
+				{
+					isReady = true;
+					SetReadyButtonColor();
+					SetMultiplayerButtonsActiveState(false);
+				}
+			}
+			else
+			{
+				Payments.Buy(LocalRecords.allPresidents.Find(x => x.ImageName == _currentPresidentImage.sprite.name).ID);
+			}
+		}
+	}
+
+	public void SetSideButtonsActiveState(bool value)
 	{
 		GameObject.Find("Prev_local").GetComponent<Animator>().SetBool("isActive", value);
 		GameObject.Find("Next_local").GetComponent<Animator>().SetBool("isActive", value);
 	}
 
+	public void SetMultiplayerButtonsActiveState(bool value)
+	{
+		GameObject.FindGameObjectWithTag("InviteButton").GetComponent<Animator>().SetBool("isHidden", value);
+		GameObject.FindGameObjectWithTag("AcceptButton").GetComponent<Animator>().SetBool("isHidden", value);
+	}
+
 	private void SetReadyButtonColor()
 	{
-		GameObject.Find("StartBuyButton_local").GetComponent<Image>().color = readyColor; 
+		GameObject.FindGameObjectWithTag("StartBuyButton").GetComponent<Image>().color = readyColor; 
 	}
 
 	private void SetNotReadyButtonColor()
 	{
-		GameObject.Find("StartBuyButton_local").GetComponent<Image>().color = notReadyColor; 
+		GameObject.FindGameObjectWithTag("StartBuyButton").GetComponent<Image>().color = notReadyColor; 
 	}
 
 	public void onTap()
@@ -110,9 +138,18 @@ public class LocalPresidentImage : MonoBehaviour
 		}
 	}
 
+	public void onMultiplayerTap()
+	{
+		if(GameTimer.isTimerStarted)
+		{
+			ScoreHandler.IncreaseLocalScore();
+			Multiplayer.MessageOnTap();
+		}
+	}
+
 	public static void onLose()
 	{
-		GameObject.Find("StartBuyButton_local").GetComponent<Image>().color = loseColor; 
+		GameObject.FindGameObjectWithTag("StartBuyButton").GetComponent<Image>().color = loseColor; 
 		SetTextToStartButton("LOSE");
 	}
 

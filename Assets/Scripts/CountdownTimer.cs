@@ -23,8 +23,8 @@ public class CountdownTimer : MonoBehaviour
 			{
 				yield return null;
 				countdownTimer -= Time.deltaTime;
-				LocalPresidentImage.SetTextToStartButton(Math.Round(countdownTimer, 0).ToString());
-				EnemyPresidentImage.SetTextToStartButton(Math.Round(countdownTimer, 0).ToString());
+				LocalPresident.SetTextToStartButton(Math.Round(countdownTimer, 0).ToString());
+				EnemyPresident.SetTextToStartButton(Math.Round(countdownTimer, 0).ToString());
 			}
 			else
 			{

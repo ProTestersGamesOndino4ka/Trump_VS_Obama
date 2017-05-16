@@ -32,18 +32,18 @@ public class ScoreHandler
 	{
 		if(localScore > enemyScore)
 		{
-			LocalPresidentImage.onWin();
-			EnemyPresidentImage.onLose();
+			LocalPresident.onWin();
+			EnemyPresident.onLose();
 		}
 		else if(localScore < enemyScore)
 		{
-			LocalPresidentImage.onLose();
-			EnemyPresidentImage.onWin();
+			LocalPresident.onLose();
+			EnemyPresident.onWin();
 		}
 		else
 		{
-			LocalPresidentImage.onDraw();
-			EnemyPresidentImage.onDraw();
+			LocalPresident.onDraw();
+			EnemyPresident.onDraw();
 		}
 	}
 

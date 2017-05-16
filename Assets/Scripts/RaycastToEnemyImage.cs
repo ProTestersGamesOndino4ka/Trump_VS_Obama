@@ -17,7 +17,7 @@ public class RaycastToEnemyImage : MonoBehaviour
 		{
 			ChangePresidentAnimationHandler.isPlayingAnimation = false;
 			Debug.Log(_presidentImageHittedByRay.sprite.ToString());
-			EnemyPresidentImage.SetCurrentPresidentImage(_presidentImageHittedByRay);
+			EnemyPresident.SetCurrentPresidentImage(_presidentImageHittedByRay);
 		}
 	}
 

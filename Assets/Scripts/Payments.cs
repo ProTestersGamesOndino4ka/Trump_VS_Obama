@@ -17,8 +17,8 @@ public class Payments
 		SaveDataManager.SaveUserData();
 		SaveDataManager.ReadDataFromFile(false);
 		//LoadScene.LoadGamemodeScene();
-		LocalPresidentImage.SetCurrentPresidentImage(LocalPresidentImage.GetCurrentPresidentImage());
-		EnemyPresidentImage.SetCurrentPresidentImage(EnemyPresidentImage.GetCurrentPresidentImage());
+		LocalPresident.SetCurrentPresidentImage(LocalPresident.GetCurrentPresidentImage());
+		EnemyPresident.SetCurrentPresidentImage(EnemyPresident.GetCurrentPresidentImage());
 	}
 
 }

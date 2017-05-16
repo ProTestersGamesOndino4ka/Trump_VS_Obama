@@ -25,13 +25,13 @@ public class GameTimer : MonoBehaviour
 			{
 				yield return null;
 				gameTimer -= Time.deltaTime;
-				LocalPresidentImage.SetTextToStartButton(Math.Round(gameTimer, 3).ToString());
-				EnemyPresidentImage.SetTextToStartButton(Math.Round(gameTimer, 3).ToString());
+				LocalPresident.SetTextToStartButton(Math.Round(gameTimer, 3).ToString());
+				EnemyPresident.SetTextToStartButton(Math.Round(gameTimer, 3).ToString());
 			}
 			else
 			{
-				LocalPresidentImage.SetTextToStartButton("0");
-				EnemyPresidentImage.SetTextToStartButton("0");
+				LocalPresident.SetTextToStartButton("0");
+				EnemyPresident.SetTextToStartButton("0");
 				Debug.Log("CHOOSE WINNER");
 				isTimerStarted = false;
 				ScoreHandler.ChooseWinner();
