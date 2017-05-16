@@ -22,7 +22,10 @@ public class Multiplayer : MonoBehaviour, RealTimeMultiplayerListener
 
     void RealTimeMultiplayerListener.OnRoomConnected(bool success)
     {
+
         GameObject.Find("Canvas/Text1").GetComponent<Text>().text = "Норма. все тута!";
+
+        Message();
     }
 
     void RealTimeMultiplayerListener.OnLeftRoom()
@@ -46,10 +49,20 @@ public class Multiplayer : MonoBehaviour, RealTimeMultiplayerListener
     }
 
     void RealTimeMultiplayerListener.OnRealTimeMessageReceived(bool isReliable, string senderId, byte[] data)
-    {
-        string imagePresidentName = System.Text.Encoding.UTF8.GetString(data);
-        GameObject.Find("Canvas/Image").GetComponent<Image>().sprite = GameObject.Find("Canvas/Panel/" + imagePresidentName).GetComponent<Image>().sprite;
+    {   
+        string decryptedData = System.Text.Encoding.UTF8.GetString(data);
+
+        if (decryptedData == "onTap")
+        {
+            ScoreHandler.IncreaseEnemyScore();
+        }
+        else
+        {
+            GameObject.Find("Canvas/Image").GetComponent<Image>().sprite = GameObject.Find("Canvas/Panel/" + decryptedData).GetComponent<Image>().sprite;
+        }
     }
+  
+
 
     public void InviteFriends()
     {
@@ -65,6 +78,13 @@ public class Multiplayer : MonoBehaviour, RealTimeMultiplayerListener
     public void Message()
     {
         byte[] message = System.Text.Encoding.UTF8.GetBytes(RaycastToImage._presidentImageHittedByRay.name);
+        bool reliable = true;
+        PlayGamesPlatform.Instance.RealTime.SendMessageToAll(reliable, message);
+    }
+
+   static public void MessageOnTap()
+    {
+        byte[] message = System.Text.Encoding.UTF8.GetBytes("onTap");
         bool reliable = true;
         PlayGamesPlatform.Instance.RealTime.SendMessageToAll(reliable, message);
     }
