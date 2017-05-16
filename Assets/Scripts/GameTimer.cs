@@ -26,7 +26,7 @@ public class GameTimer : MonoBehaviour
 				yield return null;
 				gameTimer -= Time.deltaTime;
 				LocalPresident.SetTextToStartButton(Math.Round(gameTimer, 3).ToString());
-				if(EnemyPresident.GetCurrentPresidentImage() != null)
+				if(EnemyPresident.isReady)
 				{
 					EnemyPresident.SetTextToStartButton(Math.Round(gameTimer, 3).ToString());
 				}
@@ -34,7 +34,7 @@ public class GameTimer : MonoBehaviour
 			else
 			{
 				LocalPresident.SetTextToStartButton("0");
-				if(EnemyPresident.GetCurrentPresidentImage() != null)
+				if(EnemyPresident.isReady)
 				{
 					EnemyPresident.SetTextToStartButton("0");
 				}
