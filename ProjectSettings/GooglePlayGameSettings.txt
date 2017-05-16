@@ -1,10 +1,10 @@
 lastUpgrade=00936
 proj.pluginVersion=0.9.36
-proj.AppId=250236178715
-and.BundleId=om.belka.trumpvsobamaa
+proj.AppId=927223606836
+and.BundleId=com.belka.trumpvsobama
 proj.classDir=Assets
 proj.ConstantsClassName=GPGSIds
-and.ResourceData=%3c%3fxml+version%3d%221.0%22+encoding%3d%22utf-8%22%3f%3e%0d%0a%3c%21--%0d%0aGoogle+Play+game+services+IDs.%0d%0aSave+this+file+as+res%2fvalues%2fgames-ids.xml+in+your+project.%0d%0a--%3e%0d%0a%3cresources%3e%0d%0a++%3cstring+name%3d%22app_id%22%3e250236178715%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22package_name%22%3eom.belka.trumpvsobamaa%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22achievement_1%22%3eCgkIm6L0maQHEAIQAQ%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22achievement_2%22%3eCgkIm6L0maQHEAIQAg%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22achievement_3%22%3eCgkIm6L0maQHEAIQAw%3c%2fstring%3e%0d%0a%3c%2fresources%3e%0d%0a%0a
-and.ClientId=250236178715-v88q63b1cun4q4i1hn4bga3o1j47qmc9.apps.googleusercontent.com
+and.ResourceData=%3c%3fxml+version%3d%221.0%22+encoding%3d%22utf-8%22%3f%3e%0d%0a%3c%21--%0d%0aGoogle+Play+game+services+IDs.%0d%0aSave+this+file+as+res%2fvalues%2fgames-ids.xml+in+your+project.%0d%0a--%3e%0d%0a%3cresources%3e%0d%0a++%3cstring+name%3d%22app_id%22%3e927223606836%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22package_name%22%3ecom.belka.trumpvsobama%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22achievement_1%22%3eCgkItNzVlv4aEAIQAA%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22achievement_2%22%3eCgkItNzVlv4aEAIQAQ%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22achievement_3%22%3eCgkItNzVlv4aEAIQAg%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22achievement_4%22%3eCgkItNzVlv4aEAIQAw%3c%2fstring%3e%0d%0a++%3cstring+name%3d%22achievement_5%22%3eCgkItNzVlv4aEAIQBA%3c%2fstring%3e%0d%0a%3c%2fresources%3e%0d%0a
+and.ClientId=927223606836-8rs8uoqurmiiaq1r7cs6921vbmtikae8.apps.googleusercontent.com
 proj.requireGPlus=false
 android.SetupDone=true
