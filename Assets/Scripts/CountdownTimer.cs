@@ -24,7 +24,10 @@ public class CountdownTimer : MonoBehaviour
 				yield return null;
 				countdownTimer -= Time.deltaTime;
 				LocalPresident.SetTextToStartButton(Math.Round(countdownTimer, 0).ToString());
-				EnemyPresident.SetTextToStartButton(Math.Round(countdownTimer, 0).ToString());
+				if(EnemyPresident.GetCurrentPresidentImage() != null)
+				{
+					EnemyPresident.SetTextToStartButton(Math.Round(countdownTimer, 0).ToString());
+				}
 			}
 			else
 			{

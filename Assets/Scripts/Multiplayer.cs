@@ -59,6 +59,7 @@ public class Multiplayer : MonoBehaviour, RealTimeMultiplayerListener
 		}
 		else
 		{
+			LocalPresident.SetMultiplayerButtonsActiveState(true);
 			FlagHandler.SetPresidentSprite(decryptedData);
 			CountdownTimer.StartCountdown();
 		}

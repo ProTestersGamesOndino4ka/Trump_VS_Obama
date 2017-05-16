@@ -36,7 +36,7 @@ public class FlagHandler : MonoBehaviour
 
 	public static void SetPresidentSprite(string presidentImageName)
 	{		
-		_flagImage.sprite = _listOfPresidentSprites.Find(x => x.name == LocalRecords.allPresidents.Find(y => y.ImageName == presidentImageName).FlagName);
+		_flagImage.sprite = _listOfPresidentSprites.Find(x => x.name == LocalRecords.allPresidents.Find(y => y.ImageName == presidentImageName).ImageName);
 	}
 
 

@@ -108,13 +108,13 @@ public class LocalPresident : MonoBehaviour
 		}
 	}
 
-	public void SetSideButtonsActiveState(bool value)
+	public static void SetSideButtonsActiveState(bool value)
 	{
 		GameObject.Find("Prev_local").GetComponent<Animator>().SetBool("isActive", value);
 		GameObject.Find("Next_local").GetComponent<Animator>().SetBool("isActive", value);
 	}
 
-	public void SetMultiplayerButtonsActiveState(bool value)
+	public static void SetMultiplayerButtonsActiveState(bool value)
 	{
 		GameObject.FindGameObjectWithTag("InviteButton").GetComponent<Animator>().SetBool("isHidden", value);
 		GameObject.FindGameObjectWithTag("AcceptButton").GetComponent<Animator>().SetBool("isHidden", value);
