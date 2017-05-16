@@ -7,30 +7,28 @@ using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using GooglePlayGames.BasicApi.SavedGame;
 
-public class GooglePlayGames_CloudSystem
+public class GoogleCloudSystem
 {
 
-	private const string SAVE_NAME = "game_save";
+	private static readonly string SAVE_NAME = "game_save";
 
 	public void Initialize()
 	{
-		SaveDataManager dataManager = new SaveDataManager();
-
 		if(!isAuthenticated)
 		{			
 			try
 			{
 				LoadDataFromCloud();
-				dataManager.ReadDataFromCloud();
+				SaveDataManager.ReadDataFromCloud();
 			}
 			catch (System.Exception)
 			{
-				dataManager.ReadDataFromFile();
+				SaveDataManager.ReadDataFromFile(true);
 			}
 		}
 		else
 		{
-			dataManager.ReadDataFromFile();
+			SaveDataManager.ReadDataFromFile(true);
 		}
 	}
 
@@ -38,12 +36,8 @@ public class GooglePlayGames_CloudSystem
 		get{ return Social.Active.localUser.authenticated; }
 	}
 
-	public void SaveDataToCloud(SaveDataManager data)
-	{		
-		/*if(loadedDataString != data.GetLocalDataString())
-		{
-			_saveDataString = data.GetLocalDataString();
-			data.SaveDataStringInFile();*/
+	public void SaveUserDataToCloud()
+	{	
 		try
 		{
 			((PlayGamesPlatform)Social.Active).SavedGame.OpenWithAutomaticConflictResolution(
@@ -55,42 +49,37 @@ public class GooglePlayGames_CloudSystem
 		}
 		catch (System.Exception ex)
 		{
-			Debug.LogWarning("Error on SaveDataToCloud; Same loaded string as file; " + ex.Message);
+			Debug.LogWarning("Error on SaveUserDataToCloud; " + ex.Message);
 		}
-
-		//}
 	}
 
 	private void SaveData(SavedGameRequestStatus status, ISavedGameMetadata game)
 	{
-		//if(status == SavedGameRequestStatus.Success && !string.IsNullOrEmpty(_saveDataString))
-		//{
-		Debug.Log("Good status");
-		byte[] savingData = SaveDataManager.EncryptStringToBytes("_saveDataString");
-		Debug.Log("bytes ");
-		SavedGameMetadataUpdate.Builder builder = new SavedGameMetadataUpdate.Builder();
-		SavedGameMetadataUpdate updateMetadata = builder.Build();
-		Debug.Log("Builders");
-		((PlayGamesPlatform)Social.Active).SavedGame.CommitUpdate(
-			game,
-			updateMetadata,
-			savingData,
-			SavedDataWritten
-		);
-		//}
+		if(status == SavedGameRequestStatus.Success)
+		{
+			Debug.Log("Good status");
+			byte[] savingData = SaveDataManager.GetBytesFromDataString();
+			Debug.Log("bytes");
+			SavedGameMetadataUpdate.Builder builder = new SavedGameMetadataUpdate.Builder();
+			SavedGameMetadataUpdate updateMetadata = builder.Build();
+			Debug.Log("Builders");
+			((PlayGamesPlatform)Social.Active).SavedGame.CommitUpdate(
+				game,
+				updateMetadata,
+				savingData,
+				SavedDataWritten
+			);
+		}
 	}
 
 	private void SavedDataWritten(SavedGameRequestStatus status, ISavedGameMetadata game)
 	{
 		if(status == SavedGameRequestStatus.Success)
 		{
-			Debug.Log("Game written");
-			Debug.Log("Game " + game.Description + "written");
-			SaveDataManager data = new SaveDataManager();
+			Debug.Log("Game< " + game.Description + " >written");
 		}
 		else
 		{
-			Debug.Log("Game NOT written");
 			Debug.LogWarning("Error saving game: " + status);
 		}
 	}

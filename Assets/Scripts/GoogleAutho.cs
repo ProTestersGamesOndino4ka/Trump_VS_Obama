@@ -58,6 +58,7 @@ public class GoogleAutho : MonoBehaviour, RealTimeMultiplayerListener
 
 	void Awake()
 	{
+		int countOfAuthentications = 0;
 		try
 		{
 			PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
@@ -71,16 +72,19 @@ public class GoogleAutho : MonoBehaviour, RealTimeMultiplayerListener
 			Debug.LogWarning("Unhandled exception on config Initializing" + ex.Message);
 		}
 		Social.localUser.Authenticate((bool success) => {
+			countOfAuthentications++;
 			Debug.Log(success);
-			if(success)
+			if(countOfAuthentications < 3)
 			{
-				GooglePlayGames_CloudSystem _cloud = new GooglePlayGames_CloudSystem();
-				_cloud.Initialize();
-			}
-			else
-			{
-				SaveDataManager _data = new SaveDataManager();
-				_data.ReadDataFromFile();
+				if(success)
+				{
+					GoogleCloudSystem _cloud = new GoogleCloudSystem();
+					_cloud.Initialize();
+				}
+				else
+				{
+					SaveDataManager.ReadDataFromFile(true);
+				}
 			}
 		});
 

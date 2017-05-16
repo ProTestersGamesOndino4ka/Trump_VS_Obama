@@ -59,14 +59,14 @@ public class FreePresident : MonoBehaviour
 			GameObject.Find("Canvas/TimeAds").SetActive(false);
 			SaveDataManager.SetPoints(-100);
 			GenerationRandomPresident();         
-			new GooglePlayGames_CloudSystem().SaveDataToCloud(new SaveDataManager());          
+			SaveDataManager.SaveUserData();          
 		}
 		else
 		{
 			ShowAds();
 			//Не забыть убрать от сюда!!!!!
 			SaveDataManager.SetPoints(50);
-			new GooglePlayGames_CloudSystem().SaveDataToCloud(new SaveDataManager());
+			SaveDataManager.SaveUserData();
 			PlayerPrefs.SetString("TimeFreePresident", DateTime.Now.ToString());
 			CloseTab();
 		}
@@ -86,7 +86,7 @@ public class FreePresident : MonoBehaviour
 		{
 			// Ads.Show();         
 			SaveDataManager.SetPoints(50);
-			new GooglePlayGames_CloudSystem().SaveDataToCloud(new SaveDataManager());
+			SaveDataManager.SaveUserData();
 			CloseTab();
 		}
 		else

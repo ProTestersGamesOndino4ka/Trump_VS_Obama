@@ -14,20 +14,20 @@ public class LoadingText : MonoBehaviour
 
 	public static void AddText(string textToAdd)
 	{
-		
-		loadingText.text += "\n" + textToAdd;
+		if(loadingText != null)
+		{
+			loadingText.text += "\n" + textToAdd;
+		}
 	}
 
 	public void OnCloudChoose()
 	{
-		SaveDataManager manager = new SaveDataManager();	
-		manager.OnChooseDataSource(true);
+		SaveDataManager.OnChooseDataSource(true);
 	}
 
 	public void OnLocalChoose()
 	{
-		SaveDataManager manager = new SaveDataManager();	
-		manager.OnChooseDataSource(false);
+		SaveDataManager.OnChooseDataSource(false);
 	}
 
 	public static void EnableButtons()
@@ -35,9 +35,11 @@ public class LoadingText : MonoBehaviour
 		Button local = GameObject.Find("local_button").GetComponent<Button>();
 		Button cloud = GameObject.Find("cloud_button").GetComponent<Button>();
 
-		local.enabled = cloud.enabled = true;
-
-		local.colors = cloud.colors = new ColorBlock(){ normalColor = Color.green };
+		if(local != null && cloud != null)
+		{
+			local.enabled = cloud.enabled = true;
+			local.colors = cloud.colors = new ColorBlock(){ normalColor = Color.green };
+		}
 	}
 
 }

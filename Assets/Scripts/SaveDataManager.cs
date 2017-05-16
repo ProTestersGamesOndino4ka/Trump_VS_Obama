@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-public class SaveDataManager
+public static class SaveDataManager
 {
 
 	private static readonly string FILE_NAME = "JSON_DATA.txt";
@@ -16,12 +16,12 @@ public class SaveDataManager
 	private static readonly string ENCRYPTED_DEFAULT_USER_DATA = "34;108;111;99;97;108;80;114;101;115;105;100;101;110;116;115;34;58;50;54;53;53;69;54;50;59;49;53;50;52;83;68;54;44;34;114;101;99;111;114;100;83;99;111;114;101;34;58;48";
 
 	private static byte[] cloudData;
-	private static string _dataString;
+	public static string _dataString;
 	private static string _pathToFile;
 	private static List<string> localPresidentIDs;
 	private static int clickPoints;
 
-	public SaveDataManager()
+	static SaveDataManager()
 	{
 #if UNITY_EDITOR
 		if(string.IsNullOrEmpty(_pathToFile))
@@ -40,16 +40,16 @@ public class SaveDataManager
 		cloudData = data;
 	}
 
-	public void OnChooseDataSource(bool isCloudData)
+	public static void OnChooseDataSource(bool isCloudData)
 	{
 		if(isCloudData)
 		{
 			SaveDataStringInFile(BytesArrayAsString(cloudData));
 		}
-		ReadDataFromFile();
+		ReadDataFromFile(true);
 	}
 
-	public void ReadDataFromCloud()
+	public static void ReadDataFromCloud()
 	{
 		if(!File.Exists(_pathToFile))
 		{
@@ -67,17 +67,17 @@ public class SaveDataManager
 			}
 			else
 			{
-				ReadDataFromFile();
+				ReadDataFromFile(true);
 			}
 		}
 		else
 		{
-			ReadDataFromFile();
+			ReadDataFromFile(true);
 		}
 
 	}
 
-	public void ReadDataFromFile()
+	public static void ReadDataFromFile(bool isNeedToGoToGamemodeScene)
 	{
 		if(!File.Exists(_pathToFile))
 		{
@@ -98,17 +98,17 @@ public class SaveDataManager
 			}
 		}
 
-		ParseDataStringToElements();
+		ParseDataStringToElements(isNeedToGoToGamemodeScene);
 	}
 
-	private void SetDefaultData()
+	private static void SetDefaultData()
 	{
 		var fileWriter = File.CreateText(_pathToFile);
 		fileWriter.Write(ENCRYPTED_DEFAULT_USER_DATA);
 		fileWriter.Close();
 	}
 
-	private string GetDataStringFromFile()
+	private static string GetDataStringFromFile()
 	{
 		var fileReader = File.OpenText(_pathToFile);
 		_dataString = fileReader.ReadToEnd();
@@ -116,7 +116,7 @@ public class SaveDataManager
 		return _dataString;
 	}
 
-	private void ParseDataStringToElements()
+	private static void ParseDataStringToElements(bool isNeedToGoToGamemodeScene)
 	{
 		string[] dataSubstrings = new string[] { };
 		try
@@ -127,7 +127,7 @@ public class SaveDataManager
 		{
 			Debug.LogWarning("Error on Split _dataString");
 			RecreateDataFileAndSetDefaultData();
-			ReadDataFromFile();
+			ReadDataFromFile(true);
 			return;
 		}
 
@@ -144,32 +144,30 @@ public class SaveDataManager
 				if(!LocalRecords.SetMyPresidents())
 				{
 					RecreateDataFileAndSetDefaultData();
-					ReadDataFromFile();
+					ReadDataFromFile(true);
 					return;
 				}
 				Debug.Log("Set local presidents");
-				LocalPresidentImage.SetCurrentPresidentImage(LocalPresidentImage.GetCurrentPresidentImage());
-				Debug.Log("Set price");
 			}
 			catch (FormatException)
 			{
 				Debug.LogWarning("Error on parse PresidetsID");
 				RecreateDataFileAndSetDefaultData();
-				ReadDataFromFile();
+				ReadDataFromFile(true);
 				return;
 			}
 			catch (IndexOutOfRangeException)
 			{
 				Debug.LogWarning("Error on Split substring or wrong INDEX_OF_PRESIDENT_IDS_STRING");
 				RecreateDataFileAndSetDefaultData();
-				ReadDataFromFile();
+				ReadDataFromFile(true);
 				return;
 			}
 
 
 			try
 			{
-				Debug.Log("\nSunstring count = " + dataSubstrings.Length);
+				Debug.Log("\nSubstrings count = " + dataSubstrings.Length);
 				clickPoints = int.Parse(dataSubstrings[INDEX_OF_MAXSCORE_STRING].Replace('}', '\0'));
 				Debug.Log("\nMax score = " + clickPoints);
 			}
@@ -177,14 +175,14 @@ public class SaveDataManager
 			{
 				Debug.LogWarning("Error on parse \"localrecord\"");
 				RecreateDataFileAndSetDefaultData();
-				ReadDataFromFile();
+				ReadDataFromFile(true);
 				return;
 			}
 			catch (IndexOutOfRangeException)
 			{
 				Debug.LogWarning("Wrong index of dataSubstrings");
 				RecreateDataFileAndSetDefaultData();
-				ReadDataFromFile();
+				ReadDataFromFile(true);
 				return;
 			}
 		}
@@ -192,18 +190,26 @@ public class SaveDataManager
 		{
 			Debug.LogWarning("Wrong substring length" + dataSubstrings.Length);
 			RecreateDataFileAndSetDefaultData();
-			ReadDataFromFile();
+			ReadDataFromFile(true);
 			return;
 		}
-		LoadScene.LoadGamemodeScene();
+		if(isNeedToGoToGamemodeScene)
+		{
+			LoadScene.LoadGamemodeScene();
+		}
 	}
 
-	public string GetLocalDataString()
+	public static void SaveUserData()
 	{
-		return CreateLocalDataString();
+		//Local Save
+		CreateLocalDataString();
+		SaveDataStringInFile(BytesArrayAsString(GetBytesFromDataString()));
+
+		//Cloud Save
+		new GoogleCloudSystem().SaveUserDataToCloud();
 	}
 
-	private string CreateLocalDataString()
+	private static string CreateLocalDataString()
 	{
 		string tempDataString = string.Empty;
 		tempDataString += "\"localPresidents\":";
@@ -220,7 +226,7 @@ public class SaveDataManager
 		return localPresidentIDs;
 	}
 
-	public int GetMaxScore()
+	public static int GetMaxScore()
 	{
 		return clickPoints;
 	}
@@ -258,19 +264,19 @@ public class SaveDataManager
 		}
 	}
 
-	public void SaveDataStringInFile(string str)
+	private static void SaveDataStringInFile(string str)
 	{
 		var fileWritter = File.CreateText(_pathToFile);
 		fileWritter.WriteLine(str);
 		fileWritter.Close();
 	}
 
-	private void RecreateDataFile()
+	private static void RecreateDataFile()
 	{
 		File.Create(_pathToFile).Close();
 	}
 
-	private void RecreateDataFileAndSetDefaultData()
+	private static void RecreateDataFileAndSetDefaultData()
 	{
 		RecreateDataFile();
 		SetDefaultData();
@@ -287,9 +293,9 @@ public class SaveDataManager
 		clickPoints += enterPoints;
 	}
 
-	public static byte[] EncryptStringToBytes(string message)
+	public static byte[] GetBytesFromDataString()
 	{
-		byte[] bytes = Encoding.UTF8.GetBytes(message);
+		byte[] bytes = Encoding.UTF8.GetBytes(_dataString);
 		return bytes;
 	}
 

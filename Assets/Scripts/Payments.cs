@@ -5,17 +5,20 @@ using UnityEngine;
 public class Payments
 {
 
-	public Payments ()
+	public Payments()
 	{
 		//Some Google Play shit
 	}
 
-	public static void Buy (string presidentID)
+	public static void Buy(string presidentID)
 	{
 		//Some Google Play shit
-		SaveDataManager.AddPresidentID (presidentID);
-		GooglePlayGames_CloudSystem cloudSave = new GooglePlayGames_CloudSystem ();
-		cloudSave.SaveDataToCloud (new SaveDataManager ());
+		SaveDataManager.AddPresidentID(presidentID);
+		SaveDataManager.SaveUserData();
+		SaveDataManager.ReadDataFromFile(false);
+		//LoadScene.LoadGamemodeScene();
+		LocalPresidentImage.SetCurrentPresidentImage(LocalPresidentImage.GetCurrentPresidentImage());
+		EnemyPresidentImage.SetCurrentPresidentImage(EnemyPresidentImage.GetCurrentPresidentImage());
 	}
 
 }

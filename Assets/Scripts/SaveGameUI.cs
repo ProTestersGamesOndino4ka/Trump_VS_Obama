@@ -13,6 +13,6 @@ public class SaveGameUI : MonoBehaviour
 
 	public void OpenSelectSavedGamesUI ()
 	{
-		GooglePlayGames_CloudSystem.ShowSelectUI ();
+		GoogleCloudSystem.ShowSelectUI ();
 	}
 }
