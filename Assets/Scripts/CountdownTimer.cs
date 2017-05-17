@@ -41,6 +41,7 @@ public class CountdownTimer : MonoBehaviour
 	{
 		countdownTimer = COUNTDOWN_TIME;
 		instance.StartCoroutine(instance.Countdown());
+		ScoreHandler.ClearScores();
 	}
 
 	void Update()

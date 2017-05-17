@@ -9,12 +9,15 @@ public class ScoreHandler
 
 	public static int enemyScore { get; private set; }
 
+	static ScoreHandler()
+	{
+		ClearScores();
+	}
+
 	public static void IncreaseLocalScore()
 	{
 		localScore++;
-		LocalScoreText.SetText(localScore.ToString());
-		//GoogleAutho.Message();
-        
+		LocalScoreText.SetText(localScore.ToString());    
 	}
 
 	public static void IncreaseEnemyScore()
